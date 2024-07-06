@@ -1,0 +1,15 @@
+.product-count-section {
+    display: none;
+}
+
+.product-count-section-visible {
+    display: block;
+}
+
+.cart-button-invisible {
+    display: none;
+}
+
+.product-count {
+    margin: 0 5px;
+}

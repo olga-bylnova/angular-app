@@ -1,0 +1,35 @@
+:host {
+    height: auto;
+}
+
+.product-img {
+    width: 125px;
+    height: auto;
+    margin: 10px;
+}
+
+.product-img-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.product-tile {
+    display: flex;
+    width: 300px;
+    border: 1px solid black;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    height: 100%;
+}
+
+.product-rating-price {
+    display: flex;
+    justify-content: space-between;
+}
+
+.product-actions {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+}

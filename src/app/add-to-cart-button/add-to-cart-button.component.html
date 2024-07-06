@@ -1,0 +1,12 @@
+<button (click)="addToCart($event)">
+    Add To Cart
+</button>
+<div class="product-count-section">
+    <button class="minus-button" (click)="changeProductCount($event)">
+        -
+    </button>
+    <span class="product-count">{{productCount}}</span>
+    <button class="plus-button" (click)="changeProductCount($event)">
+        +
+    </button>
+</div>

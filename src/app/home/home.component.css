@@ -1,0 +1,15 @@
+.home {
+    display: flex;
+}
+
+.filters {
+    width: 500px;
+    border-right: 1px solid black;
+}
+
+.products {
+    padding: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
