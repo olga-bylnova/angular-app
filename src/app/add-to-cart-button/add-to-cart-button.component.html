@@ -1,4 +1,4 @@
-<button (click)="addToCart($event)">
+<button (click)="addToCart($event)" [disabled]="isDisabled">
     Add To Cart
 </button>
 <div class="product-count-section">

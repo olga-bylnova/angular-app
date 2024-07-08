@@ -4,16 +4,20 @@ import { AddToCartButtonComponent } from '../add-to-cart-button/add-to-cart-butt
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faStar, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import { ProductService } from '../service/product.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-product-tile',
   standalone: true,
-  imports: [AddToCartButtonComponent, FontAwesomeModule],
+  imports: [AddToCartButtonComponent, FontAwesomeModule, RouterModule],
   templateUrl: './product-tile.component.html',
   styleUrl: './product-tile.component.css'
 })
 export class ProductTileComponent {
   productService: ProductService;
+  @Input() product!: Product;
+  faStar = faStar;
+  faDollarSign = faDollarSign;
 
   constructor() {
     this.productService = inject(ProductService);
@@ -22,8 +26,4 @@ export class ProductTileComponent {
   deleteProduct(productId: number) {
     this.productService.deleteProductById(productId);
   }
-
-  @Input() product!: Product;
-  faStar = faStar;
-  faDollarSign = faDollarSign;
 }

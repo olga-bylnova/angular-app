@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-add-to-cart-button',
@@ -9,6 +9,8 @@ import { Component } from '@angular/core';
 })
 export class AddToCartButtonComponent {
   productCount: number = 0;
+  @Input() isDisabled! : boolean;
+
   addToCart(event: Event) {
     const addToCartButton = event.target as HTMLInputElement;
     addToCartButton.classList.add('cart-button-invisible');

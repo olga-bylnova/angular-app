@@ -1,0 +1,28 @@
+<div class="product-details" *ngIf="product">
+    <div class="product-details-wrapper">
+        <div class="product-img-wrapper">
+            <img class="product-img" [src]="product.image" alt="Product Image">
+        </div>
+        <div class="product-details-main">
+            <p class="product-title">{{product.title}}</p>
+            <div class="product-rating-reviews">
+                <span class="product-rating">{{product.rating.rate}}<fa-icon [icon]="faStar"></fa-icon></span>
+                <span>({{product.rating.count}} reviews)</span>
+            </div>
+            <app-add-to-cart-button [isDisabled]="isOutOfStock"></app-add-to-cart-button>
+            <div class="stockLabel">
+                <appStockLabel [stock]="product.stock"></appStockLabel>
+            </div>
+            <p>Price: <fa-icon [icon]="faDollarSign"></fa-icon>{{product.price}}</p>
+            <p class="product-description">{{product.description}}</p>
+        </div>
+    </div>
+    <div class="product-reviews">
+        <p>Customer reviews:</p>
+        <app-customer-review *ngFor="let review of reviews" [review]="review"></app-customer-review>
+        <span *ngIf="reviews.length === 0">Reviews for product not found</span>
+    </div>
+</div>
+<div *ngIf="!product">
+    Product not found
+</div>
