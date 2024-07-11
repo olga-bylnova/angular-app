@@ -1,0 +1,32 @@
+<form [formGroup]="filterForm" (ngSubmit)="applyFilters()" class="filterGroup">
+    <div>
+        <label>Price From:</label>
+        <input formControlName="priceFrom" type="number">
+    </div>
+    <div>
+        <label>Price To:</label>
+        <input formControlName="priceTo" type="number">
+    </div>
+    <div>
+        <label>Rating From:</label>
+        <input formControlName="ratingFrom" type="number">
+    </div>
+    <div>
+        <label>Rating To:</label>
+        <input formControlName="ratingTo" type="number">
+    </div>
+    <div>
+        <label>
+            <input formControlName="inStock" type="checkbox">
+            In Stock
+        </label>
+    </div>
+    <div>
+        <label>
+            <input formControlName="hasReviews" type="checkbox">
+            Has Reviews
+        </label>
+    </div>
+    <button type="submit">Apply Filters</button>
+    <button type="button" (click)="resetFilters()">Reset Filters</button>
+</form>
