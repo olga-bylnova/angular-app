@@ -1,8 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Product } from '../model/product';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { Review } from '../model/review';
+import { EditProductDto } from '../dto/edit-product-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -26,10 +27,6 @@ export class ProductService {
       });
   }
 
-  getProducts(): Product[] {
-    return this.products;
-  }
-
   deleteProductById(productId: number) {
     let removeIndex = this.products.map(product => product.id).indexOf(productId);
     if (removeIndex !== -1) {
@@ -51,7 +48,7 @@ export class ProductService {
   getFilteredProducts(filters: { [key: string]: string }): Observable<Product[]> {
     let params = new HttpParams();
     let filterArray = Object.entries(filters);
-    
+
     for (let [key, value] of filterArray) {
       if (value && this.filterQueryParamMap.has(key)) {
         let mapValue = this.filterQueryParamMap.get(key) || '';
@@ -65,16 +62,39 @@ export class ProductService {
     params = params.append('_embed', 'reviews');
 
     return this.http.get<Product[]>(this.getProductsApiUrl, { params }).pipe(
-      map(products => this.additionalFiltering(products, filters))
+      map(products => this.addFiltering(products, filters))
     );
   }
 
-  additionalFiltering(products: Product[], filters: { [key: string]: string }): Product[] {
+  addFiltering(products: Product[], filters: { [key: string]: string }): Product[] {
     return products.filter(product => {
       if (filters['hasReviews'] === 'true') {
         return product.reviews.length > 0;
       }
       return true;
     });
+  }
+
+  updateProduct(productDto: EditProductDto, id: number) {
+    let productToUpdate = this.products.find(product => product.id === id);
+    if (productToUpdate) {
+      productToUpdate.title = productDto.title ?? productToUpdate.title;
+      productToUpdate.price = productDto.price ?? productToUpdate.price;
+      productToUpdate.description = productDto.description ?? productToUpdate.description;
+      productToUpdate.image = productDto.image ?? productToUpdate.image;
+      productToUpdate.stock = productDto.stock ?? productToUpdate.stock;
+
+      const url = `${this.getProductsApiUrl}/${id}`;
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      };
+      this.http.put<Product>(url, productToUpdate, httpOptions).subscribe(
+        updatedProduct => {
+          console.log('Product updated:', updatedProduct);
+        }
+      );
+    }
   }
 }
