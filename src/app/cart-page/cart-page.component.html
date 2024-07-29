@@ -1,0 +1,25 @@
+<table>
+    <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Count</th>
+            <th>Price</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let cartItem of cartItems" [@rowAnimation]>
+            <td>{{cartItem.id}}</td>
+            <td>{{cartItem.title}}</td>
+            <td>{{cartItem.count}}</td>
+            <td>{{cartItem.price}}</td>
+            <td>{{cartItem.price * cartItem.count}}</td>
+            <td>
+                <button (click)="deleteCartItem(cartItem.id)">
+                    <fa-icon [icon]="faRectangleXmark"></fa-icon>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -51,4 +51,8 @@ export class HomeComponent {
   get filterKeys() {
     return Object.keys(this.filters);
   }
+
+  onProductDeleted() {
+    this.loadProducts();
+  }
 }

@@ -10,7 +10,7 @@ import { EditProductDto } from '../dto/edit-product-dto';
 })
 export class ProductService {
   products: Product[] = [];
-  private getProductsApiUrl = 'http://localhost:3000/products';
+  private mainProductsApiUrl = 'http://localhost:3000/products';
   private getReviewsByProductIdApiUrl = 'http://localhost:3000/reviews?productId=';
 
   private filterQueryParamMap = new Map([
@@ -21,22 +21,23 @@ export class ProductService {
   ]);
 
   constructor(private http: HttpClient) {
-    http.get<Product[]>(this.getProductsApiUrl).subscribe(
+    http.get<Product[]>(this.mainProductsApiUrl).subscribe(
       data => {
         this.products = data;
       });
   }
 
   deleteProductById(productId: number) {
-    let removeIndex = this.products.map(product => product.id).indexOf(productId);
-    if (removeIndex !== -1) {
-      this.
-        products.splice(removeIndex, 1);
-    }
+    const url = `${this.mainProductsApiUrl}/${productId}`;
+    this.http.delete<Product>(url).subscribe(
+      () => {
+        console.log(`Product with id ${productId} deleted`);
+      }
+    );
   }
 
   async getProductById(id: number): Promise<Product> {
-    const url = `${this.getProductsApiUrl}/${id}`;
+    const url = `${this.mainProductsApiUrl}/${id}`;
     return firstValueFrom(this.http.get<Product>(url));
   }
 
@@ -61,7 +62,7 @@ export class ProductService {
     }
     params = params.append('_embed', 'reviews');
 
-    return this.http.get<Product[]>(this.getProductsApiUrl, { params }).pipe(
+    return this.http.get<Product[]>(this.mainProductsApiUrl, { params }).pipe(
       map(products => this.addFiltering(products, filters))
     );
   }
@@ -84,7 +85,7 @@ export class ProductService {
       productToUpdate.image = productDto.image ?? productToUpdate.image;
       productToUpdate.stock = productDto.stock ?? productToUpdate.stock;
 
-      const url = `${this.getProductsApiUrl}/${id}`;
+      const url = `${this.mainProductsApiUrl}/${id}`;
       const httpOptions = {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'

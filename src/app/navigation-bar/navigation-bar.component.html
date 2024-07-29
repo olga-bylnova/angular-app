@@ -6,7 +6,9 @@
         </div>
         <span class="navigation-link">Shop</span>
         <span class="navigation-link">Authentication</span>
-        <fa-icon [icon]="faCartShopping" class="navigation-link"></fa-icon>
+        <button [routerLink]="['cart']">
+            <fa-icon [icon]="faCartShopping" class="navigation-link"></fa-icon>
+        </button>
     </div>
     <div class="navigation-actions">
         <div class="search-wrapper">

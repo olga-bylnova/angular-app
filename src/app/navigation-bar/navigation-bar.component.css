@@ -55,3 +55,12 @@
 .search-bar:focus {
     outline: none;
 }
+
+button {
+    border: none;
+    background-color: #fff;
+}
+
+button:hover {
+    background-color: #eee;
+}
