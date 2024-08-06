@@ -1,4 +1,5 @@
-<table>
+<p *ngIf="cartItems.length === 0">No items in the cart</p>
+<table *ngIf="cartItems.length > 0">
     <thead>
         <tr>
             <th>Product ID</th>

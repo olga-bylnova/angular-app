@@ -53,12 +53,8 @@ export class CartService {
     return this.http.get<CartItem[]>(this.mainCartApiUrl);
   }
 
-  deleteCartItem(cartItemId: number) {
+  deleteCartItem(cartItemId: number) : Observable<CartItem> {
     const url = `${this.mainCartApiUrl}/${cartItemId}`;
-    this.http.delete<CartItem>(url).subscribe(
-      () => {
-        console.log(`Cart item with id ${cartItemId} deleted`);
-      }
-    );
+    return this.http.delete<CartItem>(url);
   }
 }

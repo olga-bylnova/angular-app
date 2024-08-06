@@ -38,8 +38,12 @@ export class CartPageComponent {
   }
 
   deleteCartItem(cartItemId: number) {
-    this.cartService.deleteCartItem(cartItemId);
-    this.getCartItems();
+    this.cartService.deleteCartItem(cartItemId).subscribe(
+      () => {
+        console.log(`Cart item with id ${cartItemId} deleted`);
+        this.cartItems = this.cartItems.filter(item => item.id !== cartItemId);
+      }
+    );
   }
 
   getCartItems() {

@@ -1,9 +1,11 @@
 <div class="navigation">
     <div class="navigation-links">
-        <div class="navigation-link company-name">
-            <fa-icon [icon]="faAt" class="at-icon"></fa-icon>
-            <span>Your company</span>
-        </div>
+        <a [routerLink]="['/']">
+            <div class="navigation-link company-name">
+                <fa-icon [icon]="faAt" class="at-icon"></fa-icon>
+                <span>Your company</span>
+            </div>
+        </a>
         <span class="navigation-link">Shop</span>
         <span class="navigation-link">Authentication</span>
         <button [routerLink]="['cart']">
@@ -15,6 +17,13 @@
             <fa-icon [icon]="faSearch" class="search-icon"></fa-icon>
             <input type="text" class="search-bar" placeholder="Search">
         </div>
-        <fa-icon [icon]="faArrowRightFromBracket"></fa-icon>
+        <div *ngIf="isUserLoggedIn">
+            <button (click)="logout()">
+                <fa-icon [icon]="faArrowRightFromBracket"></fa-icon>
+            </button>
+        </div>
+        <div *ngIf="!isUserLoggedIn">
+            <a [routerLink]="['auth']">Log in</a>
+        </div>
     </div>
 </div>
