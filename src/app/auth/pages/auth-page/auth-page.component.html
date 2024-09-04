@@ -1,0 +1,30 @@
+<div class="auth-form">
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+        <div class="auth-form-header">{{ isLoginMode ? 'Sign in' : 'Register' }}</div>
+        <div class="auth-form-field">
+            <label for="email">Email address</label>
+            <input id="email" formControlName="email" type="email" placeholder="Email" />
+            <div class="error-message"
+                *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+                <div *ngIf="email?.errors?.['required']">Email is required.</div>
+                <div *ngIf="email?.errors?.['email']">Invalid email format.</div>
+            </div>
+        </div>
+        <div class="auth-form-field">
+            <label for="password">Password</label>
+            <input id="password" formControlName="password" type="password" placeholder="Password" />
+            <div class="error-message"
+                *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+                <div *ngIf="password?.errors?.['required']">Password is required.</div>
+            </div>
+        </div>
+        <div class="submit-button">
+            <button type="submit" [disabled]="!authForm.valid">{{ isLoginMode ? 'Login' : 'Register' }}</button>
+        </div>
+    </form>
+    <span *ngIf="isLoginMode">To create a new account, click </span>
+    <span *ngIf="!isLoginMode">Do you already have an account? Please, click </span>
+    <a href="#" (click)="onSwitchMode($event)">
+        here!
+    </a>
+</div>

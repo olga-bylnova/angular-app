@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { ProductDetailsComponent } from './product-details/product-details.component';
-import { EditProductComponent } from './edit-product/edit-product.component';
-import { CartPageComponent } from './cart-page/cart-page.component';
-import { AuthPageComponent } from './auth-page/auth-page.component';
-import { AuthGuard } from './auth.guard';
+import { HomeComponent } from './products/pages/home/home.component';
+import { ProductDetailsComponent } from './products/pages/product-details/product-details.component';
+import { EditProductComponent } from './products/pages/edit-product/edit-product.component';
+import { CartPageComponent } from './cart/pages/cart-page/cart-page.component';
+import { AuthPageComponent } from './auth/pages/auth-page/auth-page.component';
+import { AuthGuard } from './auth/guards/auth.guard';
 
 const routes: Routes = [
     {
