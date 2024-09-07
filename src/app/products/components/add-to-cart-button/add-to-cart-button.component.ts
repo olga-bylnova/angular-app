@@ -13,7 +13,7 @@ import { CartService } from '../../../cart/services/cart.service';
 export class AddToCartButtonComponent {
   @Input() isDisabled!: boolean;
   productCount: number = 0;
-  @Input() cartItem: CartItem | undefined | null;
+  @Input() cartItem: CartItem | undefined;
   @Input() product!: Product;
   cartService: CartService;
 

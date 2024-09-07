@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FilterService } from '../../services/filter.service';
 
@@ -14,17 +14,8 @@ export class FilterComponent {
   filterForm: FormGroup;
   filterService: FilterService = inject(FilterService);
 
-  constructor(private fb: FormBuilder, private router: Router) {
-    this.filterForm = this.fb.group({
-      priceFrom: [''],
-      priceTo: [''],
-      ratingFrom: [''],
-      ratingTo: [''],
-      inStock: [false],
-      hasReviews: [false]
-    });
-
-    this.filterService.initializeForm(this.filterForm);
+  constructor(private router: Router) {
+    this.filterForm = this.filterService.initializeForm();
   }
 
   applyFilters() {

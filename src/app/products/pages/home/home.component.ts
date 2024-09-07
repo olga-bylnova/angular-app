@@ -6,6 +6,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FilterComponent } from '../../components/filter/filter.component';
 import { ProductService } from '../../services/product.service';
 import { FilterService } from '../../services/filter.service';
+import { HttpParams } from '@angular/common/http';
+import { FILTERS } from '../../util/filters.constants';
+import { CartService } from '../../../cart/services/cart.service';
+import { CartItem } from '../../../cart/models/cart-item';
 
 @Component({
   selector: 'app-home',
@@ -16,12 +20,18 @@ import { FilterService } from '../../services/filter.service';
 })
 export class HomeComponent {
   productService: ProductService = inject(ProductService);
+  cartService: CartService = inject(CartService);
   filterService: FilterService = inject(FilterService);
   @ViewChild(FilterComponent) filterComponent!: FilterComponent;
   products: Product[] = [];
   filters: any = {};
+  cartItems: CartItem[] | undefined;
 
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  constructor(private route: ActivatedRoute, private router: Router) {
+    this.cartService.getCartItems().subscribe(data => {
+      this.cartItems = data;
+    });
+  }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -31,7 +41,7 @@ export class HomeComponent {
   }
 
   loadProducts() {
-    this.productService.getFilteredProducts(this.filters).subscribe(products => {
+    this.productService.getFilteredProducts(this.getRequestParams(this.filters)).subscribe(products => {
       this.products = products;
     });
   }
@@ -44,12 +54,33 @@ export class HomeComponent {
       queryParamsHandling: 'merge'
     }).then(() => {
       this.filters = updatedFilters;
-      this.filterService.initializeForm(this.filterComponent.filterForm);
+      this.filterComponent.filterForm = this.filterService.initializeForm();
     });
+  }
+
+  getRequestParams(filters: { [key: string]: string }): HttpParams {
+    let params = new HttpParams();
+    Object.keys(filters).forEach(key => {
+      const value = filters[key];
+      const filter = FILTERS.get(key);
+
+      if (filter && value) {
+        if (value === 'true') {
+          params = params.append(filter.requestQueryParam, '0');
+        } else {
+          params = params.append(filter.requestQueryParam, value);
+        }
+      }
+    });
+    return params;
   }
 
   get filterKeys() {
     return Object.keys(this.filters);
+  }
+
+  getCartItem(productId: Number): CartItem | undefined {
+    return this.cartItems?.find(cartItem => cartItem.id === productId);
   }
 
   onProductDeleted() {

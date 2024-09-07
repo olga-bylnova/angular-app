@@ -22,19 +22,13 @@ export class ProductTileComponent {
   cartService: CartService;
   @Input() product!: Product;
   @Output() productDeleted = new EventEmitter<number>();
-  cartItem$: Observable<CartItem | null> = of(null);
+  @Input() cartItem: CartItem | undefined;
   faStar = faStar;
   faDollarSign = faDollarSign;
 
   constructor() {
     this.productService = inject(ProductService);
     this.cartService = inject(CartService);
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['product'] && this.product) {
-      this.cartItem$ = this.cartService.getCartItemByProductId(this.product.id);
-    }
   }
 
   deleteProduct(productId: number) {

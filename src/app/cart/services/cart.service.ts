@@ -37,7 +37,7 @@ export class CartService {
     return this.cartDataService.getCartItems();
   }
 
-  deleteCartItem(cartItemId: number) {
-    this.cartDataService.deleteCartItem(cartItemId).subscribe();
+  deleteCartItem(cartItemId: number): Observable<CartItem> {
+    return this.cartDataService.deleteCartItem(cartItemId);
   }
 }

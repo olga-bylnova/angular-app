@@ -1,6 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Product } from '../models/product';
 import { Review } from '../models/review';
 import { EditProductDto } from '../models/edit-product-dto';
@@ -11,13 +11,6 @@ import { ProductDataService } from './product-data.service';
 })
 export class ProductService {
   productDataService: ProductDataService = inject(ProductDataService);
-
-  private filterQueryParamMap = new Map([
-    ['priceFrom', 'price_gte'],
-    ['priceTo', 'price_lte'],
-    ['ratingFrom', 'rating.rate_gte'],
-    ['ratingTo', 'rating.rate_lte']
-  ]);
 
   deleteProductById(productId: number) {
     this.productDataService.deleteProduct(productId);
@@ -31,34 +24,8 @@ export class ProductService {
     return this.productDataService.getReviewsByProductId(productId);
   }
 
-  getFilteredProducts(filters: { [key: string]: string }): Observable<Product[]> {
-    let params = new HttpParams();
-    let filterArray = Object.entries(filters);
-
-    for (let [key, value] of filterArray) {
-      if (value && this.filterQueryParamMap.has(key)) {
-        let mapValue = this.filterQueryParamMap.get(key) || '';
-        params = params.append(mapValue, value + '');
-      }
-    }
-
-    if (filters['inStock'] === 'true') {
-      params = params.append('stock_ne', 0);
-    }
-    params = params.append('_embed', 'reviews');
-
-    return this.productDataService.getProductsWithParams(params).pipe(
-      map(products => this.addFiltering(products, filters))
-    );
-  }
-
-  addFiltering(products: Product[], filters: { [key: string]: string }): Product[] {
-    return products.filter(product => {
-      if (filters['hasReviews'] === 'true') {
-        return product.reviews && product.reviews.length > 0;
-      }
-      return true;
-    });
+  getFilteredProducts(params: HttpParams): Observable<Product[]> {
+    return this.productDataService.getProductsWithParams(params);
   }
 
   updateProduct(productDto: EditProductDto, id: number) {
