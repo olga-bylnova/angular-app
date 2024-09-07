@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { skip } from 'rxjs/operators';
-import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-auth-page',
@@ -15,7 +15,7 @@ import { UserService } from '../../services/user.service';
 export class AuthPageComponent {
   authForm: FormGroup;
   isLoginMode: boolean = true;
-  userService: UserService = inject(UserService);
+  authService: AuthService = inject(AuthService);
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.authForm = this.fb.group({
@@ -25,7 +25,7 @@ export class AuthPageComponent {
   }
 
   ngOnInit() {
-    this.userService.message$
+    this.authService.message$
       .pipe(
         skip(1)
       )
@@ -47,14 +47,14 @@ export class AuthPageComponent {
     const password = this.authForm.get('password')?.value;
 
     if (this.isLoginMode) {
-      this.userService.authenticateUser(email, password);
+      this.authService.authenticateUser(email, password);
     } else {
-      this.userService.createUser(email, password);
+      this.authService.registerUser(email, password);
     }
 
     this.authForm.reset();
 
-    this.userService.isUserLoggedIn$.subscribe(isLoggedIn => {
+    this.authService.isUserLoggedIn$.subscribe(isLoggedIn => {
       if (isLoggedIn) {
         this.router.navigate(['']);
       }

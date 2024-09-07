@@ -1,17 +1,16 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { firstValueFrom, map, Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { Product } from '../models/product';
 import { Review } from '../models/review';
 import { EditProductDto } from '../models/edit-product-dto';
+import { ProductDataService } from './product-data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  products: Product[] = [];
-  private mainProductsApiUrl = 'http://localhost:3000/products';
-  private getReviewsByProductIdApiUrl = 'http://localhost:3000/reviews?productId=';
+  productDataService: ProductDataService = inject(ProductDataService);
 
   private filterQueryParamMap = new Map([
     ['priceFrom', 'price_gte'],
@@ -20,26 +19,16 @@ export class ProductService {
     ['ratingTo', 'rating.rate_lte']
   ]);
 
-  constructor(private http: HttpClient) {
-    http.get<Product[]>(this.mainProductsApiUrl).subscribe(
-      data => {
-        this.products = data;
-      });
-  }
-
   deleteProductById(productId: number) {
-    const url = `${this.mainProductsApiUrl}/${productId}`;
-    this.http.delete<Product>(url);
+    this.productDataService.deleteProduct(productId);
   }
 
-  async getProductById(id: number): Promise<Product> {
-    const url = `${this.mainProductsApiUrl}/${id}`;
-    return firstValueFrom(this.http.get<Product>(url));
+  getProductById(id: number): Observable<Product> {
+    return this.productDataService.getProductById(id);
   }
 
-  async getReviewsByProductId(productId: number): Promise<Review[]> {
-    const url = this.getReviewsByProductIdApiUrl + productId;
-    return firstValueFrom(this.http.get<Review[]>(url));
+  getReviewsByProductId(productId: number): Observable<Review[]> {
+    return this.productDataService.getReviewsByProductId(productId);
   }
 
   getFilteredProducts(filters: { [key: string]: string }): Observable<Product[]> {
@@ -58,7 +47,7 @@ export class ProductService {
     }
     params = params.append('_embed', 'reviews');
 
-    return this.http.get<Product[]>(this.mainProductsApiUrl, { params }).pipe(
+    return this.productDataService.getProductsWithParams(params).pipe(
       map(products => this.addFiltering(products, filters))
     );
   }
@@ -73,21 +62,16 @@ export class ProductService {
   }
 
   updateProduct(productDto: EditProductDto, id: number) {
-    let productToUpdate = this.products.find(product => product.id === id);
-    if (productToUpdate) {
-      productToUpdate.title = productDto.title ?? productToUpdate.title;
-      productToUpdate.price = productDto.price ?? productToUpdate.price;
-      productToUpdate.description = productDto.description ?? productToUpdate.description;
-      productToUpdate.image = productDto.image ?? productToUpdate.image;
-      productToUpdate.stock = productDto.stock ?? productToUpdate.stock;
+    this.productDataService.getProductById(id).subscribe(productToUpdate => {
+      if (productToUpdate) {
+        productToUpdate.title = productDto.title ?? productToUpdate.title;
+        productToUpdate.price = productDto.price ?? productToUpdate.price;
+        productToUpdate.description = productDto.description ?? productToUpdate.description;
+        productToUpdate.image = productDto.image ?? productToUpdate.image;
+        productToUpdate.stock = productDto.stock ?? productToUpdate.stock;
 
-      const url = `${this.mainProductsApiUrl}/${id}`;
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        })
-      };
-      this.http.put<Product>(url, productToUpdate, httpOptions);
-    }
+        this.productDataService.updateProduct(productToUpdate);
+      }
+    });
   }
 }

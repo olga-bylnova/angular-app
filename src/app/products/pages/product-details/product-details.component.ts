@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { Review } from '../../models/review';
 import { ProductService } from '../../services/product.service';
 import { CustomerReviewComponent } from '../../components/customer-review/customer-review.component';
+import { Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-product-details',
@@ -20,20 +21,19 @@ import { CustomerReviewComponent } from '../../components/customer-review/custom
 export class ProductDetailsComponent {
   route: ActivatedRoute = inject(ActivatedRoute);
   productService: ProductService = inject(ProductService);
-  product: Product | undefined;
-  reviews: Review[] = [];
+  product$: Observable<Product>;
+  reviews$: Observable<Review[]>;
   isOutOfStock: boolean = false;
   faStar = faStar;
   faDollarSign = faDollarSign;
 
-  async ngOnInit() {
+  constructor() {
     const productId = Number(this.route.snapshot.params['id']);
-    await this.getProduct(productId);
-    this.reviews = await this.productService.getReviewsByProductId(productId);
-  }
-
-  async getProduct(productId: number) {
-    this.product = await this.productService.getProductById(productId);
-    this.isOutOfStock = this.product.stock === 0;
+    this.product$ = this.productService.getProductById(productId).pipe(
+      tap(product => {
+        this.isOutOfStock = product.stock === 0;
+      })
+    );
+    this.reviews$ = this.productService.getReviewsByProductId(productId);
   }
 }

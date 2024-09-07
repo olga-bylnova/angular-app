@@ -14,13 +14,7 @@ import { ProductService } from '../../services/product.service';
   styleUrl: './edit-product.component.css'
 })
 export class EditProductComponent {
-  productDto: EditProductDto = {
-    title: '',
-    price: 0,
-    description: '',
-    image: '',
-    stock: 0
-  };
+  productDto: EditProductDto | undefined;
   productService: ProductService = inject(ProductService);
   route: ActivatedRoute = inject(ActivatedRoute);
   productId: number = 0;
@@ -29,23 +23,25 @@ export class EditProductComponent {
 
   ngOnInit() {
     this.productId = Number(this.route.snapshot.params['id']);
-    this.productService.getProductById(this.productId).then(product => {
+    this.productService.getProductById(this.productId).subscribe(product => {
       let newProductDto: EditProductDto = {
-        title: product.title,
-        price: product.price,
-        description: product.description,
-        image: product.image,
-        stock: product.stock
+        title: product.title || '',
+        price: product.price || 0,
+        description: product.description || '',
+        image: product.image || '',
+        stock: product.stock || 0
       };
       this.productDto = newProductDto;
     });
   }
 
   onSubmit() {
-    this.productDto.stock = Number(this.productDto.stock);
-    this.productDto.price = Number(this.productDto.price);
-    this.productService.updateProduct(this.productDto, this.productId);
+    if (this.productDto) {
+      this.productDto.stock = Number(this.productDto.stock);
+      this.productDto.price = Number(this.productDto.price);
+      this.productService.updateProduct(this.productDto, this.productId);
 
-    this.router.navigate(['']);
+      this.router.navigate(['']);
+    }
   }
 }

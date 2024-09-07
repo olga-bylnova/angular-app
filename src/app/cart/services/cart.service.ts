@@ -1,52 +1,43 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { firstValueFrom, Observable } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { CartItem } from '../models/cart-item';
 import { Product } from '../../products/models/product';
+import { CartDataService } from './cart-data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  private mainCartApiUrl = 'http://localhost:3000/cart';
-  private getCartItemByProductIdApiUrl = 'http://localhost:3000/cart?id=';
+  private cartDataService: CartDataService = inject(CartDataService);
 
-  constructor(private http: HttpClient) { }
-
-  async getCartItemByProductId(productId: number): Promise<CartItem | undefined> {
-    const url = this.getCartItemByProductIdApiUrl + productId;
-    const cartItems = await firstValueFrom(this.http.get<CartItem[]>(url));
-    return cartItems.length > 0 ? cartItems[0] : undefined;
+  getCartItemByProductId(productId: number): Observable<CartItem | null> {
+    return this.cartDataService.getCartItemByProductId(productId)
+      .pipe(
+        map(cartItems => cartItems.length > 0 ? cartItems[0] : null)
+      );
   }
 
-  updateCartItem(cartItem: CartItem | undefined, product: Product, productCount: number) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+  updateCartItem(cartItem: CartItem, productCount: number) {
+    cartItem.count = productCount;
+    this.cartDataService.updateCartItem(cartItem).subscribe();
+  }
 
-    if (cartItem) {
-      const url = `${this.mainCartApiUrl}/${cartItem.id}`;
-      cartItem.count = productCount;
-      this.http.put<CartItem>(url, cartItem, httpOptions);
-    } else {
-      let newCartItem: CartItem = {
-        id: product.id,
-        title: product.title,
-        count: productCount,
-        price: product.price ?? 0
-      }
-      this.http.post<CartItem>(this.mainCartApiUrl, newCartItem, httpOptions);
+  createCartItem(product: Product, productCount: number): CartItem {
+    let newCartItem: CartItem = {
+      id: product.id,
+      title: product.title,
+      count: productCount,
+      price: product.price ?? 0
     }
+    this.cartDataService.createCartItem(newCartItem).subscribe();
+    return newCartItem;
   }
 
   getCartItems(): Observable<CartItem[]> {
-    return this.http.get<CartItem[]>(this.mainCartApiUrl);
+    return this.cartDataService.getCartItems();
   }
 
-  deleteCartItem(cartItemId: number) : Observable<CartItem> {
-    const url = `${this.mainCartApiUrl}/${cartItemId}`;
-    return this.http.delete<CartItem>(url);
+  deleteCartItem(cartItemId: number) {
+    this.cartDataService.deleteCartItem(cartItemId).subscribe();
   }
 }

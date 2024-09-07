@@ -1,12 +1,14 @@
-<button (click)="addToCart($event)" [disabled]="isDisabled">
-    Add To Cart
-</button>
-<div class="product-count-section">
-    <button class="minus-button" (click)="changeProductCount($event)">
-        -
+<ng-container>
+    <button (click)="addToCart($event)" [disabled]="isDisabled">
+        Add To Cart
     </button>
-    <span class="product-count">{{productCount}}</span>
-    <button class="plus-button" (click)="changeProductCount($event)">
-        +
-    </button>
-</div>
+    <div class="product-count-section">
+        <button class="minus-button" (click)="changeProductCount($event)">
+            -
+        </button>
+        <span class="product-count">{{productCount}}</span>
+        <button class="plus-button" (click)="changeProductCount($event)">
+            +
+        </button>
+    </div>
+</ng-container>

@@ -17,7 +17,7 @@
       "title": "Moresque Gold Collection Sole Eau de Parfum, 50ml",
       "price": 287,
       "description": "The name and identity of the brand are inspired by the Moorish civilization and architecture. Moresque perfume offers a collection of unique and modern perfumes that are reminiscent of the scent of the Orient in combination with Italian delicacy. The perfumes are all true sensations, which give you a feeling of luxury. Moresque perfumes are Haute Parfumerie Products. These perfumes reveal luxury, style and distinction.",
-      "stock": 23,
+      "stock": 25,
       "image": "https://lush.com.ph/cdn/shop/files/lush_20000218_1.jpg?v=1697477108",
       "rating": {
         "rate": 4.1,
@@ -123,22 +123,16 @@
   ],
   "cart": [
     {
+      "id": 2,
+      "title": "Moresque Gold Collection Sole Eau de Parfum, 50ml",
+      "count": 2,
+      "price": 287
+    },
+    {
       "id": 3,
       "title": "Vince Camuto Eterno Eau de Toilette, 100ml",
       "count": 1,
       "price": 286
-    },
-    {
-      "id": 1,
-      "title": "Van Cleef & Arpels Extraordinaire Precious Oud Eau de Parfum, 75ml",
-      "count": 5,
-      "price": 93.5
-    },
-    {
-      "id": 2,
-      "title": "Moresque Gold Collection Sole Eau de Parfum, 50ml",
-      "count": 8,
-      "price": "287"
     }
   ],
   "users": [
@@ -156,6 +150,11 @@
       "email": "test1@gmail.com",
       "password": "123",
       "id": 3
+    },
+    {
+      "email": "i.h@gmail.com",
+      "password": "11",
+      "id": 4
     }
   ],
   "reviews": [

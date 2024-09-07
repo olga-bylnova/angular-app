@@ -13,7 +13,7 @@ import { CartService } from '../../../cart/services/cart.service';
 export class AddToCartButtonComponent {
   @Input() isDisabled!: boolean;
   productCount: number = 0;
-  @Input() cartItem: CartItem | undefined;
+  @Input() cartItem: CartItem | undefined | null;
   @Input() product!: Product;
   cartService: CartService;
 
@@ -38,7 +38,6 @@ export class AddToCartButtonComponent {
 
   changeProductCount(event: Event) {
     const changeCountButton = event.target as HTMLInputElement;
-
     if (changeCountButton.classList.contains('minus-button') && this.productCount > 0) {
       this.productCount--;
     } else if (changeCountButton.classList.contains('plus-button')) {
@@ -46,7 +45,11 @@ export class AddToCartButtonComponent {
     }
 
     if (this.productCount !== 0) {
-      this.cartService.updateCartItem(this.cartItem, this.product, this.productCount);
+      if (this.cartItem) {
+        this.cartService.updateCartItem(this.cartItem, this.productCount);
+      } else {
+        this.cartItem = this.cartService.createCartItem(this.product, this.productCount);
+      }
     } else {
       if (this.cartItem) {
         this.cartService.deleteCartItem(this.cartItem.id);
