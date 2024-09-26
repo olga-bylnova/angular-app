@@ -36,8 +36,7 @@ export class AuthPageComponent {
       });
   }
 
-  onSwitchMode(event: Event) {
-    event.preventDefault();
+  onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
     this.authForm.reset();
   }
