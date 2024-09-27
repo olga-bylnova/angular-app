@@ -1,58 +1,64 @@
-import { Component, inject, Input, SimpleChanges } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CartItem } from '../../../cart/models/cart-item';
 import { Product } from '../../models/product';
 import { CartService } from '../../../cart/services/cart.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-to-cart-button',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './add-to-cart-button.component.html',
   styleUrl: './add-to-cart-button.component.css'
 })
 export class AddToCartButtonComponent {
   @Input() isDisabled!: boolean;
   productCount: number = 0;
-  @Input() cartItem: CartItem | undefined;
+  _cartItem: CartItem | undefined;
   @Input() product!: Product;
   cartService: CartService;
+  isButtonClicked = false;
 
   constructor() {
     this.cartService = inject(CartService);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['cartItem'] && changes['cartItem'].currentValue) {
-      this.productCount = changes['cartItem'].currentValue.count;
-      this.cartItem = changes['cartItem'].currentValue;
-    }
+  @Input()
+  set cartItem(value: CartItem | undefined) {
+    this._cartItem = value;
+    this.productCount = value ? value.count : 0;
   }
 
-  addToCart(event: Event) {
-    const addToCartButton = event.target as HTMLInputElement;
-    addToCartButton.classList.add('cart-button-invisible');
-
-    const productCountButtons = addToCartButton.nextElementSibling;
-    productCountButtons?.classList.add('product-count-section-visible');
+  addToCartButtonClick() {
+    this.isButtonClicked = true;
   }
 
-  changeProductCount(event: Event) {
-    const changeCountButton = event.target as HTMLInputElement;
-    if (changeCountButton.classList.contains('minus-button') && this.productCount > 0) {
+  incrementProductCount() {
+    this.productCount++;
+
+    this.updateProductCount();
+  }
+
+  decrementProductCount() {
+    if (this.productCount > 0) {
       this.productCount--;
-    } else if (changeCountButton.classList.contains('plus-button')) {
-      this.productCount++;
     }
 
+    this.updateProductCount();
+  }
+
+  updateProductCount() {
     if (this.productCount !== 0) {
-      if (this.cartItem) {
-        this.cartService.updateCartItem(this.cartItem, this.productCount);
+      if (this._cartItem) {
+        this.cartService.updateCartItem(this._cartItem, this.productCount);
       } else {
-        this.cartItem = this.cartService.createCartItem(this.product, this.productCount);
+        this._cartItem = this.cartService.createCartItem(this.product, this.productCount);
       }
     } else {
-      if (this.cartItem) {
-        this.cartService.deleteCartItem(this.cartItem.id);
+      if (this._cartItem) {
+        this.cartService.deleteCartItem(this._cartItem.id).subscribe();
+        this.isButtonClicked = false;
+        this._cartItem = undefined;
       }
     }
   }

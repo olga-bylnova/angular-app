@@ -10,10 +10,10 @@ import { CartDataService } from './cart-data.service';
 export class CartService {
   private cartDataService: CartDataService = inject(CartDataService);
 
-  getCartItemByProductId(productId: number): Observable<CartItem | null> {
+  getCartItemByProductId(productId: number): Observable<CartItem | undefined> {
     return this.cartDataService.getCartItemByProductId(productId)
       .pipe(
-        map(cartItems => cartItems.length > 0 ? cartItems[0] : null)
+        map(cartItems => cartItems.length > 0 ? cartItems[0] : undefined)
       );
   }
 
