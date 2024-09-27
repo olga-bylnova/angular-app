@@ -2,18 +2,31 @@
     <div>
         <label>Price From:</label>
         <input formControlName="priceFrom" type="number">
+        <div class="error-message" *ngIf="priceFrom?.invalid && (priceFrom?.dirty || priceFrom?.touched)">
+            <div *ngIf="priceFrom?.errors?.['min']">Price must be positive.</div>
+        </div>
     </div>
     <div>
         <label>Price To:</label>
         <input formControlName="priceTo" type="number">
+        <div class="error-message" *ngIf="priceTo?.invalid && (priceTo?.dirty || priceTo?.touched)">
+            <div *ngIf="priceTo?.errors?.['min']">Price must be positive.</div>
+        </div>
     </div>
     <div>
         <label>Rating From:</label>
         <input formControlName="ratingFrom" type="number">
+        <div class="error-message" *ngIf="ratingFrom?.invalid && (ratingFrom?.dirty || ratingFrom?.touched)">
+            <div *ngIf="ratingFrom?.errors?.['min'] || ratingFrom?.errors?.['max']">Rating must be between 1 and 5.
+            </div>
+        </div>
     </div>
     <div>
         <label>Rating To:</label>
         <input formControlName="ratingTo" type="number">
+        <div class="error-message" *ngIf="ratingTo?.invalid && (ratingTo?.dirty || ratingTo?.touched)">
+            <div *ngIf="ratingTo?.errors?.['min'] || ratingTo?.errors?.['max']">Rating must be between 1 and 5.</div>
+        </div>
     </div>
     <div>
         <label>
@@ -27,6 +40,6 @@
             Has Reviews
         </label>
     </div>
-    <button type="submit">Apply Filters</button>
+    <button type="submit" [disabled]="!isFormFilled">Apply Filters</button>
     <button type="button" (click)="resetFilters()">Reset Filters</button>
 </form>
