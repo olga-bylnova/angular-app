@@ -11,23 +11,24 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getUserByEmailAndPassword(email: string, password: string): Observable<User> {
+  getUserByEmailAndPassword(email: string, password: string): Observable<User[]> {
     let params = new HttpParams();
     params = params.append('email', email);
     params = params.append('password', password);
 
-    return this.http.get<User>(this.usersApiUrl, { params });
+    return this.http.get<User[]>(this.usersApiUrl, { params });
   }
 
-  getUserByEmail(email: string): Observable<User> {
+  getUserByEmail(email: string): Observable<User[]> {
     let params = new HttpParams();
     params = params.append('email', email);
 
-    return this.http.get<User>(this.usersApiUrl, { params });
+    return this.http.get<User[]>(this.usersApiUrl, { params });
   }
 
   createUser(email: string, password: string): Observable<User> {
     let newUser: User = {
+      id: Date.now(),
       email: email,
       password: password
     };

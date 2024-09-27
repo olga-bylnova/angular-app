@@ -21,7 +21,7 @@ export class AuthService {
     this.userService.getUserByEmailAndPassword(email, password)
       .subscribe(
         user => {
-          if (!this.isArrayEmpty(user)) {
+          if (user.length) {
             this.isUserLoggedInSubject.next(true);
           } else {
             this.messageSubject.next('Invalid email or password.');
@@ -32,7 +32,7 @@ export class AuthService {
   registerUser(email: string, password: string) {
     this.userService.getUserByEmail(email)
       .subscribe(existingUser => {
-        if (this.isArrayEmpty(existingUser)) {
+        if (!existingUser.length) {
           this.userService.createUser(email, password).subscribe(
             () => {
               this.isUserLoggedInSubject.next(true);
@@ -42,10 +42,6 @@ export class AuthService {
           this.messageSubject.next('User with such email already exists');
         }
       });
-  }
-
-  isArrayEmpty(obj: any): boolean {
-    return obj.length === 0;
   }
 
   logout() {
