@@ -21,10 +21,10 @@ export class FilterComponent {
   }
 
   ngOnInit() {
-    this.isFormFilled = Object.values(this.filterForm.value).some(this.isValueFilled);
+    this.isFormFilled = Object.values(this.filterForm.value).some(value => value);
 
     this.filterForm.valueChanges.subscribe(values => {
-      this.isFormFilled = Object.values(values).some(this.isValueFilled);
+      this.isFormFilled = Object.values(values).some(value => value);
     });
   }
 
@@ -39,10 +39,6 @@ export class FilterComponent {
   resetFilters() {
     this.filterForm.reset();
     this.router.navigate(['']);
-  }
-
-  isValueFilled(value: any): boolean {
-    return value !== null && value !== false && value !== '';
   }
 
   get ratingFrom() {

@@ -27,16 +27,19 @@ export class HomeComponent {
   filters: any = {};
   cartItems: CartItem[] | undefined;
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(private route: ActivatedRoute, private router: Router) { }
+
+  ngOnInit(): void {
     this.cartService.getCartItems().subscribe(data => {
       this.cartItems = data;
     });
-  }
 
-  ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.filters = params;
       this.loadProducts();
+      if (this.filterComponent) {
+        this.filterComponent.filterForm.patchValue(this.filterService.getFormUpdateValue());
+      }
     });
   }
 
@@ -48,13 +51,12 @@ export class HomeComponent {
 
   removeFilter(key: string) {
     const updatedFilters = { ...this.filters };
-    updatedFilters[key] = '';
+    delete updatedFilters[key];
     this.router.navigate([], {
-      queryParams: updatedFilters,
-      queryParamsHandling: 'merge'
+      queryParams: updatedFilters
     }).then(() => {
       this.filters = updatedFilters;
-      this.filterComponent.filterForm = this.filterService.initializeForm();
+      this.filterComponent.filterForm.patchValue(this.filterService.getFormUpdateValue());
     });
   }
 
