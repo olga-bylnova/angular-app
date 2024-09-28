@@ -25,11 +25,11 @@ export class EditProductComponent {
     this.productId = Number(this.route.snapshot.params['id']);
     this.productService.getProductById(this.productId).subscribe(product => {
       let newProductDto: EditProductDto = {
-        title: product.title || '',
-        price: product.price || 0,
-        description: product.description || '',
-        image: product.image || '',
-        stock: product.stock || 0
+        title: product.title,
+        price: product.price,
+        description: product.description,
+        image: product.image,
+        stock: product.stock
       };
       this.productDto = newProductDto;
     });
@@ -39,9 +39,10 @@ export class EditProductComponent {
     if (this.productDto) {
       this.productDto.stock = Number(this.productDto.stock);
       this.productDto.price = Number(this.productDto.price);
-      this.productService.updateProduct(this.productDto, this.productId);
-
-      this.router.navigate(['']);
+      this.productService.updateProduct(this.productDto, this.productId)
+        .subscribe(() =>
+          this.router.navigate([''])
+        );
     }
   }
 }

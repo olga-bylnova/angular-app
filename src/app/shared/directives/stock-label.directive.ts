@@ -18,19 +18,17 @@ export class StockLabelDirective implements OnChanges {
   updateStockLabel() {
     let color = '';
     let text = '';
-    if (this.stock !== undefined) {
-      if (this.stock === 0) {
-        color = 'red';
-        text = 'Out of stock';
-      } else if (this.stock > 0 && this.stock < 10) {
-        color = 'yellow';
-        text = 'Almost sold out';
-      } else {
-        color = 'green';
-        text = 'In stock';
-      }
-      this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', color);
-      this.renderer.setProperty(this.el.nativeElement, 'textContent', text);
+    if (!this.stock) {
+      color = 'red';
+      text = 'Out of stock';
+    } else if (this.stock > 0 && this.stock < 10) {
+      color = 'yellow';
+      text = 'Almost sold out';
+    } else {
+      color = 'green';
+      text = 'In stock';
     }
+    this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', color);
+    this.renderer.setProperty(this.el.nativeElement, 'textContent', text);
   }
 }

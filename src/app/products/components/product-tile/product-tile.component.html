@@ -7,13 +7,13 @@
     </a>
     <div class="product-details">
         <div class="product-actions">
-            <app-add-to-cart-button [cartItem]="cartItem" [product]="product"></app-add-to-cart-button>
+            <app-add-to-cart-button [cartItem]="cartItem" [product]="product" [isDisabled]="!product.stock"></app-add-to-cart-button>
             <button [routerLink]="['/product/edit', product.id]">Edit</button>
             <button (click)="deleteProduct(product.id)">Delete</button>
         </div>
         <div class="product-rating-price">
-            <span>{{product.rating?.rate}}<fa-icon [icon]="faStar"></fa-icon></span>
-            <span><fa-icon [icon]="faDollarSign"></fa-icon>{{product.price}}</span>
+            <span>{{product.rating?.rate ?? 0}}<fa-icon [icon]="faStar"></fa-icon></span>
+            <span><fa-icon [icon]="faDollarSign"></fa-icon>{{product.price ?? 0}}</span>
         </div>
     </div>
 </div>

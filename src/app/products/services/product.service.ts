@@ -1,6 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Product } from '../models/product';
 import { Review } from '../models/review';
 import { EditProductDto } from '../models/edit-product-dto';
@@ -28,17 +28,19 @@ export class ProductService {
     return this.productDataService.getProductsWithParams(params);
   }
 
-  updateProduct(productDto: EditProductDto, id: number) {
-    this.productDataService.getProductById(id).subscribe(productToUpdate => {
-      if (productToUpdate) {
-        productToUpdate.title = productDto.title ?? productToUpdate.title;
-        productToUpdate.price = productDto.price ?? productToUpdate.price;
-        productToUpdate.description = productDto.description ?? productToUpdate.description;
-        productToUpdate.image = productDto.image ?? productToUpdate.image;
-        productToUpdate.stock = productDto.stock ?? productToUpdate.stock;
-
-        this.productDataService.updateProduct(productToUpdate);
-      }
-    });
+  updateProduct(productDto: EditProductDto, id: number): Observable<Product> {
+    return this.productDataService.getProductById(id).pipe(
+      tap(productToUpdate => {
+        if (productToUpdate) {
+          productToUpdate.title = productDto.title || productToUpdate.title;
+          productToUpdate.price = productDto.price || productToUpdate.price;
+          productToUpdate.description = productDto.description || productToUpdate.description;
+          productToUpdate.image = productDto.image || productToUpdate.image;
+          productToUpdate.stock = productDto.stock || productToUpdate.stock;
+          
+          this.productDataService.updateProduct(productToUpdate);
+        }
+      })
+    );
   }
 }

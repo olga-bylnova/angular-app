@@ -7,14 +7,14 @@
             <div class="product-details-main">
                 <p class="product-title">{{product.title}}</p>
                 <div class="product-rating-reviews">
-                    <span class="product-rating">{{product.rating?.rate}}<fa-icon [icon]="faStar"></fa-icon></span>
-                    <span>({{product.rating?.count}} reviews)</span>
+                    <span class="product-rating">{{product.rating?.rate ?? 0}}<fa-icon [icon]="faStar"></fa-icon></span>
+                    <span>({{product.rating?.count ?? 0}} reviews)</span>
                 </div>
-                <app-add-to-cart-button [isDisabled]="isOutOfStock"></app-add-to-cart-button>
+                <app-add-to-cart-button [isDisabled]="isOutOfStock" [product]="product" [cartItem]="cartItem"></app-add-to-cart-button>
                 <div class="stockLabel">
                     <appStockLabel [stock]="product.stock"></appStockLabel>
                 </div>
-                <p>Price: <fa-icon [icon]="faDollarSign"></fa-icon>{{product.price}}</p>
+                <p>Price: <fa-icon [icon]="faDollarSign"></fa-icon>{{product.price ?? 0}}</p>
                 <p class="product-description">{{product.description}}</p>
             </div>
         </div>
