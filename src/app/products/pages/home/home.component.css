@@ -1,10 +1,10 @@
 .home {
     display: flex;
-    justify-content: flex-end;
 }
 
 .filters {
     border-right: 1px solid black;
+    max-width: min-content;
 }
 
 .products {
