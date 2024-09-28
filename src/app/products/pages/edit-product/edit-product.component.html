@@ -1,0 +1,49 @@
+<ng-container>
+    @if (this.productDto) {
+        <div class="edit-form-wrapper">
+            <div class="edit-form">
+                <span class="edit-form-header">Edit product info:</span>
+                <form (ngSubmit)="onSubmit()" #editForm="ngForm">
+                    <div>
+                        <p>Image:</p>
+                        <input type="text" id="image" [(ngModel)]="productDto.image" name="image">
+                    </div>
+                    <div class="form-group">
+                        <p>Title:</p>
+                        <input type="text" id="title" [(ngModel)]="productDto.title" name="title">
+                    </div>
+                    <div>
+                        <p>Price:</p>
+                        <input appPositiveDoubleValidator type="text" id="price" [(ngModel)]="productDto.price" name="price"
+                            #price="ngModel">
+                    </div>
+                    <div [hidden]="price.valid || price.pristine" class="alert-danger">
+                        Price must be positive integer or fractional.
+                    </div>
+                    <div>
+                        <p>Number in stock:</p>
+                        <input appPositiveIntegerValidator type="text" id="stock" [(ngModel)]="productDto.stock"
+                            name="stock" #stock="ngModel">
+                    </div>
+                    <div [hidden]="stock.valid || stock.pristine" class="alert-danger">
+                        Stock must be positive integer.
+                    </div>
+                    <div>
+                        <p>Description:</p>
+                        <textarea type="text" class="product-description" id="description"
+                            [(ngModel)]="productDto.description" name="description"></textarea>
+                    </div>
+                    <p>
+                        <button [disabled]="!editForm.form.valid" type="submit">Submit</button>
+                    </p>
+                </form>
+            </div>
+            <div>
+                <img class="product-img" [src]="productDto.image" alt="Product image">
+            </div>
+        </div>
+    }
+    @else {
+        <p>Product not found</p>
+    }
+</ng-container>

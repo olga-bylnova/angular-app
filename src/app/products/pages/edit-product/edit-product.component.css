@@ -1,0 +1,31 @@
+.edit-form-wrapper {
+    padding: 50px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.edit-form-header {
+    font-weight: bold;
+}
+
+input {
+    width: 20em;
+}
+
+.product-description {
+    min-height: 150px;
+    width: 20em;
+}
+
+.product-img {
+    width: 350px;
+    height: auto;
+}
+
+.ng-invalid:not(form) {
+    border: 3px solid red;
+}
+
+.alert-danger {
+    color: red;
+}

@@ -1,0 +1,14 @@
+.user-avatar {
+    height: 40px;
+    width: auto;
+    margin-right: 10px;
+}
+
+.review {
+    display: flex;
+}
+
+.review-details {
+    display: flex;
+    flex-direction: column;
+}

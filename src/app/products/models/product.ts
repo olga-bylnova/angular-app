@@ -1,0 +1,13 @@
+import { Rating } from "./rating";
+import { Review } from "./review";
+
+export interface Product {
+    id: number;
+    title?: string;
+    price?: number;
+    description?: string;
+    image?: string;
+    stock?: number;
+    rating?: Rating;
+    reviews?: Review[];
+}

@@ -1,0 +1,31 @@
+:host {
+    padding: 20px;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+tr {
+    margin: 10px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+td, th {
+    text-align: center;
+    padding: 10px;
+}
+
+button {
+    border: none;
+    background-color: #fff;
+}
+
+button:hover {
+    background-color: #eee;
+}

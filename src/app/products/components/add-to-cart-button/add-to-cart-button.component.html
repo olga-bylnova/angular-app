@@ -1,0 +1,16 @@
+<ng-container>
+    <button [ngClass]="{'cart-button-invisible': productCount > 0 || isButtonClicked}" (click)="addToCartButtonClick()"
+        [disabled]="isDisabled">
+        Add To Cart
+    </button>
+    <div [ngClass]="{'product-count-section-visible': productCount > 0 || isButtonClicked}"
+        class="product-count-section">
+        <button class="minus-button" (click)="decrementProductCount()">
+            -
+        </button>
+        <span class="product-count">{{productCount}}</span>
+        <button class="plus-button" (click)="incrementProductCount()">
+            +
+        </button>
+    </div>
+</ng-container>
