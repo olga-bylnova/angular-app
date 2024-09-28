@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Product } from '../../models/product';
 import { AddToCartButtonComponent } from '../add-to-cart-button/add-to-cart-button.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 import { CartItem } from '../../../cart/models/cart-item';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../../cart/services/cart.service';
-import { Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 @Component({

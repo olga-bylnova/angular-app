@@ -42,8 +42,8 @@ export class AuthPageComponent {
   }
 
   onSubmit() {
-    const email = this.authForm.get('email')?.value;
-    const password = this.authForm.get('password')?.value;
+    const email = this.email?.value;
+    const password = this.password?.value;
 
     if (this.isLoginMode) {
       this.authService.authenticateUser(email, password);
