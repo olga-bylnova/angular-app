@@ -30,7 +30,7 @@ export class ProductTileComponent {
     this.cartService = inject(CartService);
   }
 
-  deleteProduct(productId: number) {
+  deleteProduct(productId: string) {
     this.productService.deleteProductById(productId);
     this.productDeleted.emit();
   }

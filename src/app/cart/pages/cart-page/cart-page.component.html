@@ -15,13 +15,13 @@
             </thead>
             <tbody>
                 <tr *ngFor="let cartItem of cartItems" [@rowAnimation]>
-                    <td>{{cartItem.id}}</td>
+                    <td>{{cartItem._id}}</td>
                     <td>{{cartItem.title}}</td>
                     <td>{{cartItem.count}}</td>
                     <td>{{cartItem.price}}</td>
                     <td>{{cartItem.price * cartItem.count}}</td>
                     <td>
-                        <button (click)="deleteCartItem(cartItem.id)">
+                        <button (click)="deleteCartItem(cartItem._id)">
                             <fa-icon [icon]="faRectangleXmark"></fa-icon>
                         </button>
                     </td>

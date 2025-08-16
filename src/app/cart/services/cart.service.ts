@@ -10,7 +10,7 @@ import { CartDataService } from './cart-data.service';
 export class CartService {
   private cartDataService: CartDataService = inject(CartDataService);
 
-  getCartItemByProductId(productId: number): Observable<CartItem | undefined> {
+  getCartItemByProductId(productId: string): Observable<CartItem | undefined> {
     return this.cartDataService.getCartItemByProductId(productId)
       .pipe(
         map(cartItems => cartItems.length > 0 ? cartItems[0] : undefined)
@@ -24,7 +24,7 @@ export class CartService {
 
   createCartItem(product: Product, productCount: number): CartItem {
     let newCartItem: CartItem = {
-      id: product.id,
+      _id: product._id,
       title: product.title,
       count: productCount,
       price: product.price ?? 0
@@ -37,7 +37,7 @@ export class CartService {
     return this.cartDataService.getCartItems();
   }
 
-  deleteCartItem(cartItemId: number): Observable<CartItem> {
+  deleteCartItem(cartItemId: string): Observable<CartItem> {
     return this.cartDataService.deleteCartItem(cartItemId);
   }
 }

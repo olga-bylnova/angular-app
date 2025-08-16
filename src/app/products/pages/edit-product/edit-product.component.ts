@@ -17,12 +17,12 @@ export class EditProductComponent {
   productDto: EditProductDto | undefined;
   productService: ProductService = inject(ProductService);
   route: ActivatedRoute = inject(ActivatedRoute);
-  productId: number = 0;
+  productId: string = '';
 
   constructor(private router: Router) { }
 
   ngOnInit() {
-    this.productId = Number(this.route.snapshot.params['id']);
+    this.productId = this.route.snapshot.params['id'];
     this.productService.getProductById(this.productId).subscribe(product => {
       let newProductDto: EditProductDto = {
         title: product.title,

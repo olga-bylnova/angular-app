@@ -2,7 +2,7 @@ import { Rating } from "./rating";
 import { Review } from "./review";
 
 export interface Product {
-    id: number;
+    _id: string;
     title?: string;
     price?: number;
     description?: string;

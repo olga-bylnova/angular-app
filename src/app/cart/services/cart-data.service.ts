@@ -8,7 +8,6 @@ import { Observable } from 'rxjs';
 })
 export class CartDataService {
   private mainCartApiUrl = 'http://localhost:3000/cart';
-  private getCartItemByProductIdApiUrl = 'http://localhost:3000/cart?id=';
   private readonly httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -17,13 +16,13 @@ export class CartDataService {
 
   constructor(private http: HttpClient) { }
 
-  getCartItemByProductId(productId: number): Observable<CartItem[]> {
-    const url = this.getCartItemByProductIdApiUrl + productId;
+  getCartItemByProductId(productId: string): Observable<CartItem[]> {
+    const url = `${this.mainCartApiUrl}/${productId}`;
     return this.http.get<CartItem[]>(url);
   }
 
   updateCartItem(cartItem: CartItem): Observable<CartItem> {
-    const url = `${this.mainCartApiUrl}/${cartItem.id}`;
+    const url = `${this.mainCartApiUrl}/${cartItem._id}`;
     return this.http.put<CartItem>(url, cartItem, this.httpOptions);
   }
 
@@ -35,7 +34,7 @@ export class CartDataService {
     return this.http.get<CartItem[]>(this.mainCartApiUrl);
   }
 
-  deleteCartItem(cartItemId: number): Observable<CartItem> {
+  deleteCartItem(cartItemId: string): Observable<CartItem> {
     const url = `${this.mainCartApiUrl}/${cartItemId}`;
     return this.http.delete<CartItem>(url);
   }

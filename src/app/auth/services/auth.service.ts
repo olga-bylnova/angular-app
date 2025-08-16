@@ -37,7 +37,7 @@ export class AuthService {
             () => {
               this.isUserLoggedInSubject.next(true);
             }
-          );;
+          );
         } else {
           this.messageSubject.next('User with such email already exists');
         }

@@ -37,10 +37,10 @@ export class CartPageComponent {
     this.getCartItems();
   }
 
-  deleteCartItem(cartItemId: number) {
+  deleteCartItem(cartItemId: string) {
     this.cartService.deleteCartItem(cartItemId).subscribe(
       () => {
-        this.cartItems = this.cartItems.filter(item => item.id !== cartItemId);
+        this.cartItems = this.cartItems.filter(item => item._id !== cartItemId);
       }
     );
   }

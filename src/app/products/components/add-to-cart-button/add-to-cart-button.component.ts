@@ -56,7 +56,7 @@ export class AddToCartButtonComponent {
       }
     } else {
       if (this._cartItem) {
-        this.cartService.deleteCartItem(this._cartItem.id).subscribe();
+        this.cartService.deleteCartItem(this._cartItem._id).subscribe();
         this.isButtonClicked = false;
         this._cartItem = undefined;
       }

@@ -12,15 +12,15 @@ import { ProductDataService } from './product-data.service';
 export class ProductService {
   productDataService: ProductDataService = inject(ProductDataService);
 
-  deleteProductById(productId: number) {
+  deleteProductById(productId: string) {
     this.productDataService.deleteProduct(productId);
   }
 
-  getProductById(id: number): Observable<Product> {
+  getProductById(id: string): Observable<Product> {
     return this.productDataService.getProductById(id);
   }
 
-  getReviewsByProductId(productId: number): Observable<Review[]> {
+  getReviewsByProductId(productId: string): Observable<Review[]> {
     return this.productDataService.getReviewsByProductId(productId);
   }
 
@@ -28,7 +28,7 @@ export class ProductService {
     return this.productDataService.getProductsWithParams(params);
   }
 
-  updateProduct(productDto: EditProductDto, id: number): Observable<Product> {
+  updateProduct(productDto: EditProductDto, id: string): Observable<Product> {
     return this.productDataService.getProductById(id).pipe(
       tap(productToUpdate => {
         if (productToUpdate) {
@@ -37,7 +37,7 @@ export class ProductService {
           productToUpdate.description = productDto.description || productToUpdate.description;
           productToUpdate.image = productDto.image || productToUpdate.image;
           productToUpdate.stock = productDto.stock || productToUpdate.stock;
-          
+
           this.productDataService.updateProduct(productToUpdate);
         }
       })

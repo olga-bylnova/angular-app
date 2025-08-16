@@ -32,13 +32,12 @@ export class ProductDetailsComponent {
   faDollarSign = faDollarSign;
 
   ngOnInit() {
-    const productId = Number(this.route.snapshot.params['id']);
-    if (!isNaN(productId)) {
+    const productId = this.route.snapshot.params['id'];
+    if (productId) {
       this.product$ = this.productService.getProductById(productId).pipe(
         tap(product => {
           this.isOutOfStock = !product.stock;
-
-          this.cartService.getCartItemByProductId(product.id).subscribe(data => {
+          this.cartService.getCartItemByProductId(product._id).subscribe(data => {
             this.cartItem = data;
           });
         })

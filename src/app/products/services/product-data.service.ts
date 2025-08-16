@@ -13,17 +13,17 @@ export class ProductDataService {
 
   constructor(private http: HttpClient) { }
 
-  deleteProduct(productId: number) {
+  deleteProduct(productId: string) {
     const url = `${this.mainProductsApiUrl}/${productId}`;
-    this.http.delete<Product>(url);
+    this.http.delete(url);
   }
 
-  getProductById(id: number): Observable<Product> {
+  getProductById(id: string): Observable<Product> {
     const url = `${this.mainProductsApiUrl}/${id}`;
     return this.http.get<Product>(url);
   }
 
-  getReviewsByProductId(productId: number): Observable<Review[]> {
+  getReviewsByProductId(productId: string): Observable<Review[]> {
     const url = this.getReviewsByProductIdApiUrl + productId;
     return this.http.get<Review[]>(url);
   }
@@ -33,7 +33,7 @@ export class ProductDataService {
   }
 
   updateProduct(product: Product) {
-    const url = `${this.mainProductsApiUrl}/${product.id}`;
+    const url = `${this.mainProductsApiUrl}/${product._id}`;
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'

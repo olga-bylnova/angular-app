@@ -81,8 +81,8 @@ export class HomeComponent {
     return Object.keys(this.filters);
   }
 
-  getCartItem(productId: Number): CartItem | undefined {
-    return this.cartItems?.find(cartItem => cartItem.id === productId);
+  getCartItem(productId: string): CartItem | undefined {
+    return this.cartItems?.find(cartItem => cartItem._id === productId);
   }
 
   onProductDeleted() {
