@@ -31,7 +31,6 @@ export class ProductTileComponent {
   }
 
   deleteProduct(productId: string) {
-    this.productService.deleteProductById(productId);
-    this.productDeleted.emit();
+    this.productService.deleteProductById(productId).subscribe(() => this.productDeleted.emit());
   }
 }

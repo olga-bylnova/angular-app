@@ -64,14 +64,9 @@ export class HomeComponent {
     let params = new HttpParams();
     Object.keys(filters).forEach(key => {
       const value = filters[key];
-      const filter = FILTERS.get(key);
 
-      if (filter && value) {
-        if (value === 'true') {
-          params = params.append(filter.requestQueryParam, '0');
-        } else {
-          params = params.append(filter.requestQueryParam, value);
-        }
+      if (value) {
+        params = params.append(key, value);
       }
     });
     return params;

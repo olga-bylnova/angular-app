@@ -13,9 +13,9 @@ export class ProductDataService {
 
   constructor(private http: HttpClient) { }
 
-  deleteProduct(productId: string) {
+  deleteProduct(productId: string): Observable<Product> {
     const url = `${this.mainProductsApiUrl}/${productId}`;
-    this.http.delete(url);
+    return this.http.delete<Product>(url);
   }
 
   getProductById(id: string): Observable<Product> {
@@ -32,13 +32,13 @@ export class ProductDataService {
     return this.http.get<Product[]>(this.mainProductsApiUrl, { params });
   }
 
-  updateProduct(product: Product) {
+  updateProduct(product: Product): Observable<Product> {
     const url = `${this.mainProductsApiUrl}/${product._id}`;
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
-    this.http.put<Product>(url, product, httpOptions).subscribe();
+    return this.http.put<Product>(url, product, httpOptions);
   }
 }

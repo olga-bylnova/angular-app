@@ -1,10 +1,10 @@
-import { HttpParams } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
-import { Product } from '../models/product';
-import { Review } from '../models/review';
-import { EditProductDto } from '../models/edit-product-dto';
-import { ProductDataService } from './product-data.service';
+import {HttpParams} from '@angular/common/http';
+import {inject, Injectable} from '@angular/core';
+import {Observable, of, switchMap} from 'rxjs';
+import {Product} from '../models/product';
+import {Review} from '../models/review';
+import {EditProductDto} from '../models/edit-product-dto';
+import {ProductDataService} from './product-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,8 @@ import { ProductDataService } from './product-data.service';
 export class ProductService {
   productDataService: ProductDataService = inject(ProductDataService);
 
-  deleteProductById(productId: string) {
-    this.productDataService.deleteProduct(productId);
+  deleteProductById(productId: string): Observable<Product> {
+    return this.productDataService.deleteProduct(productId);
   }
 
   getProductById(id: string): Observable<Product> {
@@ -28,17 +28,19 @@ export class ProductService {
     return this.productDataService.getProductsWithParams(params);
   }
 
-  updateProduct(productDto: EditProductDto, id: string): Observable<Product> {
+  updateProduct(productDto: EditProductDto, id: string): Observable<Product | null> {
     return this.productDataService.getProductById(id).pipe(
-      tap(productToUpdate => {
-        if (productToUpdate) {
+      switchMap(productToUpdate => {
+        if (!productToUpdate) {
+          return of(null);
+        } else {
           productToUpdate.title = productDto.title || productToUpdate.title;
           productToUpdate.price = productDto.price || productToUpdate.price;
           productToUpdate.description = productDto.description || productToUpdate.description;
           productToUpdate.image = productDto.image || productToUpdate.image;
           productToUpdate.stock = productDto.stock || productToUpdate.stock;
 
-          this.productDataService.updateProduct(productToUpdate);
+          return this.productDataService.updateProduct(productToUpdate);
         }
       })
     );
