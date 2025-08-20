@@ -16,6 +16,10 @@ label {
     margin-bottom: 10px;
 }
 
+.auth-form-field-remember-label {
+  display: inline;
+}
+
 .auth-form-header {
     font-weight: bold;
     text-align: center;
@@ -28,6 +32,10 @@ label {
 
 input {
     width: 100%;
+}
+
+.auth-form-field-remember-input {
+  width: auto;
 }
 
 .submit-button {

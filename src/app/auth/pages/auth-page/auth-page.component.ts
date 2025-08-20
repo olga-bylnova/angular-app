@@ -1,9 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { skip } from 'rxjs/operators';
-import { AuthService } from '../../services/auth.service';
+import {CommonModule} from '@angular/common';
+import {Component, inject} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {skip} from 'rxjs/operators';
+import {AuthService} from '../../services/auth.service';
+import {User} from "../../../shared/models/user";
 
 @Component({
   selector: 'app-auth-page',
@@ -20,7 +21,8 @@ export class AuthPageComponent {
   constructor(private fb: FormBuilder, private router: Router) {
     this.authForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
+      rememberMe: false,
     });
   }
 
@@ -44,11 +46,17 @@ export class AuthPageComponent {
   onSubmit() {
     const email = this.email?.value;
     const password = this.password?.value;
+    const rememberMe = this.rememberMe?.value;
+    const user: User = {
+      email,
+      password,
+      rememberMe,
+    }
 
     if (this.isLoginMode) {
-      this.authService.authenticateUser(email, password);
+      this.authService.authenticateUser(user);
     } else {
-      this.authService.registerUser(email, password);
+      this.authService.registerUser(user);
     }
 
     this.authForm.reset();
@@ -66,5 +74,9 @@ export class AuthPageComponent {
 
   get email() {
     return this.authForm.get('email');
+  }
+
+  get rememberMe() {
+    return this.authForm.get('rememberMe');
   }
 }

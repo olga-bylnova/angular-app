@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { UserService } from './user.service';
 import { BehaviorSubject } from 'rxjs';
+import {User} from "../../shared/models/user";
 
 @Injectable({
   providedIn: 'root'
@@ -17,25 +18,33 @@ export class AuthService {
     this.userService = inject(UserService);
   }
 
-  authenticateUser(email: string, password: string) {
-    this.userService.getUserByEmailAndPassword(email, password)
+  authenticateUser(user: User) {
+    this.userService.getUserByEmailAndPassword(user)
       .subscribe(
         user => {
-          if (user.length) {
+          if (user) {
             this.isUserLoggedInSubject.next(true);
+            if (user.accessToken) {
+              localStorage.setItem('accessToken', user.accessToken);
+            }
           } else {
             this.messageSubject.next('Invalid email or password.');
           }
         });
   }
 
-  registerUser(email: string, password: string) {
-    this.userService.getUserByEmail(email)
-      .subscribe(existingUser => {
-        if (!existingUser.length) {
-          this.userService.createUser(email, password).subscribe(
-            () => {
-              this.isUserLoggedInSubject.next(true);
+  registerUser(user: User) {
+    this.userService.checkIfUserExists(user.email)
+      .subscribe(isUserExists => {
+        if (!isUserExists) {
+          this.userService.createUser(user).subscribe(
+            (user) => {
+              if (user) {
+                if (user.accessToken) {
+                  localStorage.setItem('accessToken', user.accessToken);
+                }
+                this.isUserLoggedInSubject.next(true);
+              }
             }
           );
         } else {

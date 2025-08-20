@@ -1,43 +1,47 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { User } from '../../shared/models/user';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {User} from '../../shared/models/user';
+import {UserAuthResponseDto} from "../models/user-auth-response-dto";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private usersApiUrl = 'http://localhost:3000/users';
+  private mainUsersApiUrl = 'http://localhost:3000/users';
+  private checkIfUserExistsApiUrl = '/check';
+  private loginUserApiUrl = '/login';
+  private registerUserApiUrl = '/register';
 
-  constructor(private http: HttpClient) { }
-
-  getUserByEmailAndPassword(email: string, password: string): Observable<User[]> {
-    let params = new HttpParams();
-    params = params.append('email', email);
-    params = params.append('password', password);
-
-    return this.http.get<User[]>(this.usersApiUrl, { params });
+  constructor(private http: HttpClient) {
   }
 
-  getUserByEmail(email: string): Observable<User[]> {
-    let params = new HttpParams();
-    params = params.append('email', email);
-
-    return this.http.get<User[]>(this.usersApiUrl, { params });
-  }
-
-  createUser(email: string, password: string): Observable<User> {
-    let newUser: User = {
-      id: Date.now(),
-      email: email,
-      password: password
-    };
+  getUserByEmailAndPassword(user: User): Observable<UserAuthResponseDto> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
-      })
+      }),
+      withCredentials: true,
     };
-    return this.http.post<User>(this.usersApiUrl, newUser, httpOptions);
+
+    return this.http.post<User>(this.mainUsersApiUrl + this.loginUserApiUrl, user, httpOptions);
+  }
+
+  checkIfUserExists(email: string): Observable<boolean> {
+    let params = new HttpParams();
+    params = params.append('email', email);
+
+    return this.http.get<boolean>(this.mainUsersApiUrl + this.checkIfUserExistsApiUrl, {params});
+  }
+
+  createUser(user: User): Observable<UserAuthResponseDto> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      withCredentials: true,
+    };
+    return this.http.post<User>(this.mainUsersApiUrl + this.registerUserApiUrl, user, httpOptions);
   }
 }
 
