@@ -5,6 +5,7 @@ import { EditProductComponent } from './products/pages/edit-product/edit-product
 import { CartPageComponent } from './cart/pages/cart-page/cart-page.component';
 import { AuthPageComponent } from './auth/pages/auth-page/auth-page.component';
 import { AuthGuard } from './auth/guards/auth.guard';
+import {ResetPasswordPageComponent} from "./auth/pages/reset-password-page/reset-password-page.component";
 
 const routes: Routes = [
     {
@@ -32,6 +33,11 @@ const routes: Routes = [
         path: 'auth',
         component: AuthPageComponent,
         title: 'Auth Page'
+    },
+    {
+      path: 'reset-password/:token',
+      component: ResetPasswordPageComponent,
+      title: 'Reset Password Page'
     }
 ];
 

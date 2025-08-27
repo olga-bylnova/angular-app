@@ -2,12 +2,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CartItem } from '../models/cart-item';
 import { Observable } from 'rxjs';
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartDataService {
-  private mainCartApiUrl = 'http://localhost:3000/cart';
+  private mainCartApiUrl = `${environment.apiUrl}/cart`;
   private readonly httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -16,9 +17,9 @@ export class CartDataService {
 
   constructor(private http: HttpClient) { }
 
-  getCartItemByProductId(productId: string): Observable<CartItem[]> {
+  getCartItemByProductId(productId: string): Observable<CartItem> {
     const url = `${this.mainCartApiUrl}/${productId}`;
-    return this.http.get<CartItem[]>(url);
+    return this.http.get<CartItem>(url);
   }
 
   updateCartItem(cartItem: CartItem): Observable<CartItem> {

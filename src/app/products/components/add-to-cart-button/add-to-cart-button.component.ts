@@ -34,31 +34,40 @@ export class AddToCartButtonComponent {
   }
 
   incrementProductCount() {
-    this.productCount++;
-
-    this.updateProductCount();
+    const newProductCount = this.productCount + 1;
+    this.updateProductCount(newProductCount);
   }
 
   decrementProductCount() {
     if (this.productCount > 0) {
-      this.productCount--;
+      const newProductCount = this.productCount - 1;
+      this.updateProductCount(newProductCount);
     }
-
-    this.updateProductCount();
   }
 
-  updateProductCount() {
-    if (this.productCount !== 0) {
+  updateProductCount(newProductCount: number) {
+    if (newProductCount !== 0) {
       if (this._cartItem) {
-        this.cartService.updateCartItem(this._cartItem, this.productCount);
+        this.cartService.updateCartItem(this._cartItem, newProductCount).subscribe(
+          () => this.productCount = newProductCount
+        );
       } else {
-        this._cartItem = this.cartService.createCartItem(this.product, this.productCount);
+        this.cartService.createCartItem(this.product, newProductCount).subscribe(
+          (cartItem) => {
+            this._cartItem = cartItem;
+            this.productCount = newProductCount;
+          }
+        );
       }
     } else {
       if (this._cartItem) {
-        this.cartService.deleteCartItem(this._cartItem._id).subscribe();
-        this.isButtonClicked = false;
-        this._cartItem = undefined;
+        this.cartService.deleteCartItem(this._cartItem._id).subscribe(
+          () => {
+            this.productCount = newProductCount;
+            this.isButtonClicked = false;
+            this._cartItem = undefined;
+          }
+        );
       }
     }
   }

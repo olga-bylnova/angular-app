@@ -15,14 +15,20 @@ import {User} from "../../../shared/models/user";
 })
 export class AuthPageComponent {
   authForm: FormGroup;
+  forgottenPasswordForm: FormGroup;
   isLoginMode: boolean = true;
   authService: AuthService = inject(AuthService);
+  showForgottenPasswordForm = false;
+  showResetLinkSentMessage = false;
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.authForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
       rememberMe: false,
+    });
+    this.forgottenPasswordForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -68,6 +74,19 @@ export class AuthPageComponent {
     });
   }
 
+  onForgottenPassword() {
+    this.showForgottenPasswordForm = true;
+  }
+
+  onSendResetLink() {
+    const email = this.forgottenPasswordForm.get('email')?.value;
+    if (email) {
+      this.authService.sendForgottenPasswordResetLink(email).subscribe(
+        () => this.showResetLinkSentMessage = true
+      );
+    }
+  }
+
   get password() {
     return this.authForm.get('password');
   }
@@ -78,5 +97,9 @@ export class AuthPageComponent {
 
   get rememberMe() {
     return this.authForm.get('rememberMe');
+  }
+
+  get fpEmail() {
+    return this.forgottenPasswordForm.get('email');
   }
 }

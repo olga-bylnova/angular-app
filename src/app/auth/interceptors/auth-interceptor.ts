@@ -1,10 +1,11 @@
 import {HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
 import {catchError, Observable, switchMap, throwError} from "rxjs";
 import {Injectable} from "@angular/core";
+import {environment} from "../../../environments/environment";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private userRefreshTokenApiUrl = 'http://localhost:3000/users/refresh';
+  private userRefreshTokenApiUrl = `${environment.apiUrl}/users/refresh`;
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let token: string | null = null;

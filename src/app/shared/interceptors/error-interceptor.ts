@@ -13,8 +13,8 @@ export class ErrorInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     return next.handle(req).pipe(
       catchError((errorResponse: HttpErrorResponse) => {
-        if (errorResponse.status === 401 && !req.url.includes('/users/refresh')) {
-          alert(`${errorResponse.status}: ${errorResponse.error?.message} || ${errorResponse.statusText}`);
+        if (errorResponse.error?.message && errorResponse.error?.stack && !req.url.includes('/users/refresh')) {
+          alert(`${errorResponse.status}: ${errorResponse.error?.message || errorResponse.statusText}`);
         }
         return throwError(() => errorResponse);
       })

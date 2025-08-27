@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { UserService } from './user.service';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {User} from "../../shared/models/user";
 
 @Injectable({
@@ -54,10 +54,23 @@ export class AuthService {
   }
 
   logout() {
-    this.isUserLoggedInSubject.next(false);
+    this.userService.logout().subscribe(
+      () => {
+        this.isUserLoggedInSubject.next(false);
+        localStorage.removeItem('accessToken');
+      }
+    );
   }
 
   get isUserLoggedIn(): boolean {
     return this.isUserLoggedInSubject.value;
+  }
+
+  sendForgottenPasswordResetLink(email: string): Observable<void> {
+    return this.userService.sendForgottenPasswordResetLink(email);
+  }
+
+  resetPassword(password: string, token: string): Observable<boolean> {
+    return this.userService.resetPassword(password, token);
   }
 }

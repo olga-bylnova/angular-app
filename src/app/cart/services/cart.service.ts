@@ -1,8 +1,8 @@
-import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { CartItem } from '../models/cart-item';
-import { Product } from '../../products/models/product';
-import { CartDataService } from './cart-data.service';
+import {inject, Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {CartItem} from '../models/cart-item';
+import {Product} from '../../products/models/product';
+import {CartDataService} from './cart-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,27 +10,23 @@ import { CartDataService } from './cart-data.service';
 export class CartService {
   private cartDataService: CartDataService = inject(CartDataService);
 
-  getCartItemByProductId(productId: string): Observable<CartItem | undefined> {
-    return this.cartDataService.getCartItemByProductId(productId)
-      .pipe(
-        map(cartItems => cartItems.length > 0 ? cartItems[0] : undefined)
-      );
+  getCartItemByProductId(productId: string): Observable<CartItem> {
+    return this.cartDataService.getCartItemByProductId(productId);
   }
 
-  updateCartItem(cartItem: CartItem, productCount: number) {
+  updateCartItem(cartItem: CartItem, productCount: number): Observable<CartItem> {
     cartItem.count = productCount;
-    this.cartDataService.updateCartItem(cartItem).subscribe();
+    return this.cartDataService.updateCartItem(cartItem);
   }
 
-  createCartItem(product: Product, productCount: number): CartItem {
+  createCartItem(product: Product, productCount: number): Observable<CartItem> {
     let newCartItem: CartItem = {
       _id: product._id,
       title: product.title,
       count: productCount,
       price: product.price ?? 0
     }
-    this.cartDataService.createCartItem(newCartItem).subscribe();
-    return newCartItem;
+    return this.cartDataService.createCartItem(newCartItem);
   }
 
   getCartItems(): Observable<CartItem[]> {

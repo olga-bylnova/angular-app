@@ -3,13 +3,14 @@ import { Product } from '../models/product';
 import { Observable } from 'rxjs';
 import { Review } from '../models/review';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductDataService {
-  private mainProductsApiUrl = 'http://localhost:3000/products';
-  private getReviewsByProductIdApiUrl = 'http://localhost:3000/reviews?productId=';
+  private mainProductsApiUrl = `${environment.apiUrl}/products`;
+  private getReviewsByProductIdApiUrl = `${environment.apiUrl}/reviews?productId=`;
 
   constructor(private http: HttpClient) { }
 

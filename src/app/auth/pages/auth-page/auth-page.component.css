@@ -47,3 +47,15 @@ input {
 .error-message {
     color: red;
 }
+
+.reset-link-sent-message {
+  background-color: green;
+
+  span {
+    color: white;
+  }
+}
+
+.forgotten-password {
+  margin-top: 15px;
+}
