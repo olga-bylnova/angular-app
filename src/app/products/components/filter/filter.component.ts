@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FilterService } from '../../services/filter.service';
@@ -11,12 +11,14 @@ import { CommonModule } from '@angular/common';
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.css'
 })
-export class FilterComponent {
+export class FilterComponent implements OnInit {
+  private filterService: FilterService = inject(FilterService);
+  private router: Router = inject(Router);
+
   filterForm: FormGroup;
-  filterService: FilterService = inject(FilterService);
   isFormFilled = false;
 
-  constructor(private router: Router) {
+  constructor() {
     this.filterForm = this.filterService.initializeForm();
   }
 

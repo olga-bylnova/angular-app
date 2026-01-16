@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { skip } from 'rxjs/operators';
-import { AuthService } from '../../services/auth.service';
+import { Store } from "@ngrx/store";
+import { AuthState } from "../../../store/models/auth.model";
+import { login, register } from "../../../store/actions/auth.actions";
+import { selectAuthError } from "../../../store/selectors/auth.selectors";
 
 @Component({
   selector: 'app-auth-page',
@@ -12,12 +14,14 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './auth-page.component.html',
   styleUrl: './auth-page.component.css'
 })
-export class AuthPageComponent {
+export class AuthPageComponent implements OnInit {
+  private fb: FormBuilder = inject(FormBuilder);
+  private store = inject(Store<AuthState>);
+
   authForm: FormGroup;
   isLoginMode: boolean = true;
-  authService: AuthService = inject(AuthService);
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor() {
     this.authForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
@@ -25,7 +29,7 @@ export class AuthPageComponent {
   }
 
   ngOnInit() {
-    this.authService.message$
+    this.store.select(selectAuthError)
       .pipe(
         skip(1)
       )
@@ -46,18 +50,12 @@ export class AuthPageComponent {
     const password = this.password?.value;
 
     if (this.isLoginMode) {
-      this.authService.authenticateUser(email, password);
+      this.store.dispatch(login({email, password}));
     } else {
-      this.authService.registerUser(email, password);
+      this.store.dispatch(register({email, password}));
     }
 
     this.authForm.reset();
-
-    this.authService.isUserLoggedIn$.subscribe(isLoggedIn => {
-      if (isLoggedIn) {
-        this.router.navigate(['']);
-      }
-    });
   }
 
   get password() {

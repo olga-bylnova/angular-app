@@ -11,12 +11,14 @@
                 </span>
             </div>
         </div>
-        @if (products.length > 0) {
+        @if (products$ | async; as products) {
             <span class="product-count">{{products.length}} products were found.</span>
             <div class="products">
-                <app-product-tile *ngFor="let product of products" [product]="product"
-                    [cartItem]="getCartItem(product.id)"
-                    (productDeleted)="onProductDeleted()"></app-product-tile>
+                <app-product-tile
+                  *ngFor="let product of products"
+                  [product]="product"
+                  [cartItem]="getCartItem(product.id) | async">
+                </app-product-tile>
             </div>
         }
         @else {

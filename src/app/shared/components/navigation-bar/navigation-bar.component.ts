@@ -3,7 +3,11 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faAt, faCartShopping, faSearch, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../auth/services/auth.service';
+import { Store } from "@ngrx/store";
+import { AuthState } from "../../../store/models/auth.model";
+import { selectIsLoggedIn } from "../../../store/selectors/auth.selectors";
+import { Observable } from "rxjs";
+import { logout } from "../../../store/actions/auth.actions";
 
 @Component({
   selector: 'app-navigation-bar',
@@ -13,21 +17,16 @@ import { AuthService } from '../../../auth/services/auth.service';
   styleUrl: './navigation-bar.component.css'
 })
 export class NavigationBarComponent {
+  private store = inject(Store<AuthState>);
+
   faAt = faAt;
   faCartShopping = faCartShopping;
   faSearch = faSearch;
   faArrowRightFromBracket = faArrowRightFromBracket;
-  isUserLoggedIn = false;
 
-  authService: AuthService = inject(AuthService);
-
-  ngOnInit() {
-    this.authService.isUserLoggedIn$.subscribe(isLoggedIn => {
-      this.isUserLoggedIn = isLoggedIn;
-    });
-  }
+  isUserLoggedIn$: Observable<boolean> = this.store.select(selectIsLoggedIn);
 
   logout() {
-    this.authService.logout();
+    this.store.dispatch(logout());
   }
 }

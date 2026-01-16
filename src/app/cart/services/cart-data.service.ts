@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { CartItem } from '../models/cart-item';
 import { Observable } from 'rxjs';
 
@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CartDataService {
+  private http: HttpClient = inject(HttpClient);
+
   private mainCartApiUrl = 'http://localhost:3000/cart';
   private getCartItemByProductIdApiUrl = 'http://localhost:3000/cart?id=';
   private readonly httpOptions = {
@@ -14,8 +16,6 @@ export class CartDataService {
       'Content-Type': 'application/json'
     })
   };
-
-  constructor(private http: HttpClient) { }
 
   getCartItemByProductId(productId: number): Observable<CartItem[]> {
     const url = this.getCartItemByProductIdApiUrl + productId;
@@ -35,8 +35,8 @@ export class CartDataService {
     return this.http.get<CartItem[]>(this.mainCartApiUrl);
   }
 
-  deleteCartItem(cartItemId: number): Observable<CartItem> {
+  deleteCartItem(cartItemId: number): Observable<void> {
     const url = `${this.mainCartApiUrl}/${cartItemId}`;
-    return this.http.delete<CartItem>(url);
+    return this.http.delete<void>(url);
   }
 }

@@ -17,27 +17,29 @@ export class CartService {
       );
   }
 
-  updateCartItem(cartItem: CartItem, productCount: number) {
-    cartItem.count = productCount;
-    this.cartDataService.updateCartItem(cartItem).subscribe();
+  updateCartItem(cartItem: CartItem, productCount: number): Observable<CartItem> {
+    let newCartItem: CartItem = {
+      ...cartItem,
+      count: productCount,
+    };
+    return this.cartDataService.updateCartItem(newCartItem);
   }
 
-  createCartItem(product: Product, productCount: number): CartItem {
+  createCartItem(product: Product, productCount: number): Observable<CartItem> {
     let newCartItem: CartItem = {
       id: product.id,
       title: product.title,
       count: productCount,
       price: product.price ?? 0
     }
-    this.cartDataService.createCartItem(newCartItem).subscribe();
-    return newCartItem;
+    return this.cartDataService.createCartItem(newCartItem);
   }
 
   getCartItems(): Observable<CartItem[]> {
     return this.cartDataService.getCartItems();
   }
 
-  deleteCartItem(cartItemId: number): Observable<CartItem> {
+  deleteCartItem(cartItemId: number): Observable<void> {
     return this.cartDataService.deleteCartItem(cartItemId);
   }
 }

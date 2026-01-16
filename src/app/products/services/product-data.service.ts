@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Product } from '../models/product';
 import { Observable } from 'rxjs';
 import { Review } from '../models/review';
@@ -11,11 +11,11 @@ export class ProductDataService {
   private mainProductsApiUrl = 'http://localhost:3000/products';
   private getReviewsByProductIdApiUrl = 'http://localhost:3000/reviews?productId=';
 
-  constructor(private http: HttpClient) { }
+  private http: HttpClient = inject(HttpClient);
 
-  deleteProduct(productId: number) {
+  deleteProduct(productId: number): Observable<void> {
     const url = `${this.mainProductsApiUrl}/${productId}`;
-    this.http.delete<Product>(url);
+    return this.http.delete<void>(url);
   }
 
   getProductById(id: number): Observable<Product> {
@@ -32,13 +32,13 @@ export class ProductDataService {
     return this.http.get<Product[]>(this.mainProductsApiUrl, { params });
   }
 
-  updateProduct(product: Product) {
+  updateProduct(product: Product): Observable<Product> {
     const url = `${this.mainProductsApiUrl}/${product.id}`;
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
-    this.http.put<Product>(url, product, httpOptions).subscribe();
+    return this.http.put<Product>(url, product, httpOptions);
   }
 }

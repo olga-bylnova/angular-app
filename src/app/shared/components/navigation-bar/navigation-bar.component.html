@@ -17,7 +17,7 @@
             <fa-icon [icon]="faSearch" class="search-icon"></fa-icon>
             <input type="text" class="search-bar" placeholder="Search">
         </div>
-        @if (isUserLoggedIn) {
+        @if (isUserLoggedIn$ | async) {
             <button (click)="logout()">
                 <fa-icon [icon]="faArrowRightFromBracket"></fa-icon>
             </button>

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FILTERS } from '../util/filters.constants';
@@ -7,7 +7,8 @@ import { FILTERS } from '../util/filters.constants';
   providedIn: 'root'
 })
 export class FilterService {
-  constructor(private route: ActivatedRoute, private fb: FormBuilder) { }
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private fb: FormBuilder = inject(FormBuilder);
 
   initializeForm() {
     const formGroup = this.fb.group({
