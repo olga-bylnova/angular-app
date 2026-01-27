@@ -40,7 +40,7 @@ export class FilterService {
     return formValues;
   }
 
-  getNumber(value: string): number | null {
+  private getNumber(value: string): number | null {
     const numberValue = Number(value);
     return isNaN(numberValue) ? null : numberValue;
   }

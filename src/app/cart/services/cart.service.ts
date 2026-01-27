@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CartItem } from '../models/cart-item';
 import { Product } from '../../products/models/product';
 import { CartDataService } from './cart-data.service';
@@ -10,11 +10,8 @@ import { CartDataService } from './cart-data.service';
 export class CartService {
   private cartDataService: CartDataService = inject(CartDataService);
 
-  getCartItemByProductId(productId: number): Observable<CartItem | undefined> {
-    return this.cartDataService.getCartItemByProductId(productId)
-      .pipe(
-        map(cartItems => cartItems.length > 0 ? cartItems[0] : undefined)
-      );
+  getCartItemById(id: number): Observable<CartItem> {
+    return this.cartDataService.getCartItemById(id);
   }
 
   updateCartItem(cartItem: CartItem, productCount: number): Observable<CartItem> {

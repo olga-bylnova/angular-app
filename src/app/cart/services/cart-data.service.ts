@@ -10,16 +10,15 @@ export class CartDataService {
   private http: HttpClient = inject(HttpClient);
 
   private mainCartApiUrl = 'http://localhost:3000/cart';
-  private getCartItemByProductIdApiUrl = 'http://localhost:3000/cart?id=';
   private readonly httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
     })
   };
 
-  getCartItemByProductId(productId: number): Observable<CartItem[]> {
-    const url = this.getCartItemByProductIdApiUrl + productId;
-    return this.http.get<CartItem[]>(url);
+  getCartItemById(id: number): Observable<CartItem> {
+    const url = `${this.mainCartApiUrl}/${id}`;
+    return this.http.get<CartItem>(url);
   }
 
   updateCartItem(cartItem: CartItem): Observable<CartItem> {

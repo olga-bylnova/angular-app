@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Observable, of, switchMap } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { Product } from '../models/product';
 import { Review } from '../models/review';
 import { EditProductDto } from '../models/edit-product-dto';
@@ -30,20 +30,16 @@ export class ProductService {
     return this.productDataService.getProductsWithParams(httpParams);
   }
 
-  updateProduct(productDto: EditProductDto, id: number): Observable<Product | null> {
+  updateProduct(productDto: EditProductDto, id: number): Observable<Product> {
     return this.productDataService.getProductById(id).pipe(
       switchMap(productToUpdate => {
-        if (!productToUpdate) {
-          return of(null);
-        } else {
-          productToUpdate.title = productDto.title || productToUpdate.title;
-          productToUpdate.price = productDto.price || productToUpdate.price;
-          productToUpdate.description = productDto.description || productToUpdate.description;
-          productToUpdate.image = productDto.image || productToUpdate.image;
-          productToUpdate.stock = productDto.stock || productToUpdate.stock;
+        productToUpdate.title = productDto.title || productToUpdate.title;
+        productToUpdate.price = productDto.price || productToUpdate.price;
+        productToUpdate.description = productDto.description || productToUpdate.description;
+        productToUpdate.image = productDto.image || productToUpdate.image;
+        productToUpdate.stock = productDto.stock || productToUpdate.stock;
 
-          return this.productDataService.updateProduct(productToUpdate);
-        }
+        return this.productDataService.updateProduct(productToUpdate);
       })
     );
   }

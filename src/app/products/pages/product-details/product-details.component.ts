@@ -39,7 +39,7 @@ export class ProductDetailsComponent implements OnInit {
         tap(product => {
           this.isOutOfStock = !product.stock;
 
-          this.cartService.getCartItemByProductId(product.id).subscribe(data => {
+          this.cartService.getCartItemById(product.id).subscribe(data => {
             this.cartItem = data;
           });
         })

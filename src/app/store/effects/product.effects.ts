@@ -50,13 +50,9 @@ export class ProductEffects {
       ofType(updateProduct),
       switchMap(({productDto, productCode}) =>
         this.productService.updateProduct(productDto, productCode).pipe(
-          map((newProduct) => {
-            if (newProduct) {
-              return updateProductSuccess({newProduct});
-            } else {
-              return updateProductFailure({error: 'Product not found'});
-            }
-          }),
+          map((newProduct) =>
+            updateProductSuccess({newProduct})
+          ),
           catchError((error) =>
             of(updateProductFailure({error}))
           )
