@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FILTERS } from '../util/filters.constants';
 
@@ -10,7 +10,7 @@ export class FilterService {
   private route: ActivatedRoute = inject(ActivatedRoute);
   private fb: FormBuilder = inject(FormBuilder);
 
-  initializeForm() {
+  initializeForm(): FormGroup {
     const formGroup = this.fb.group({
       priceFrom: [null, { validators: [Validators.min(0)] }],
       priceTo: [null, { validators: [Validators.min(0)] }],

@@ -47,7 +47,7 @@ export class AddToCartButtonComponent {
     this.updateProductCount();
   }
 
-  updateProductCount() {
+  private updateProductCount() {
     if (this.productCount !== 0) {
       if (this._cartItem) {
         this.store.dispatch(updateCartItem({ cartItem: this._cartItem, productCount: this.productCount }));

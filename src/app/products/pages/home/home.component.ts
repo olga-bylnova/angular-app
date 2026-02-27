@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
   private router: Router = inject(Router);
   private store = inject(Store<ProductState>);
 
-  @ViewChild(FilterComponent) filterComponent!: FilterComponent;
+  @ViewChild('filterRef') filterComponent!: FilterComponent;
 
   filters: any = {};
   cartItems$: Observable<CartItem[]> = this.store.select(selectCartItems);
