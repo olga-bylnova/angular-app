@@ -1,10 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { EditProductDto } from '../../models/edit-product-dto';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { PositiveIntegerValidatorDirective } from '../../../shared/directives/positive-integer-validator.directive';
 import { PositiveDoubleValidatorDirective } from '../../../shared/directives/positive-double-validator.directive';
 import { ProductService } from '../../services/product.service';
+import { Store } from "@ngrx/store";
+import { ProductState } from "../../../store/models/product.model";
+import { updateProduct } from "../../../store/actions/product.actions";
 
 @Component({
   selector: 'app-edit-product',
@@ -13,25 +16,24 @@ import { ProductService } from '../../services/product.service';
   templateUrl: './edit-product.component.html',
   styleUrl: './edit-product.component.css'
 })
-export class EditProductComponent {
-  productDto: EditProductDto | undefined;
-  productService: ProductService = inject(ProductService);
-  route: ActivatedRoute = inject(ActivatedRoute);
-  productId: number = 0;
+export class EditProductComponent implements OnInit {
+  private productService: ProductService = inject(ProductService);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private store = inject(Store<ProductState>);
 
-  constructor(private router: Router) { }
+  productDto: EditProductDto | undefined;
+  private productId: number = 0;
 
   ngOnInit() {
     this.productId = Number(this.route.snapshot.params['id']);
     this.productService.getProductById(this.productId).subscribe(product => {
-      let newProductDto: EditProductDto = {
+      this.productDto = {
         title: product.title,
         price: product.price,
         description: product.description,
         image: product.image,
         stock: product.stock
       };
-      this.productDto = newProductDto;
     });
   }
 
@@ -39,10 +41,8 @@ export class EditProductComponent {
     if (this.productDto) {
       this.productDto.stock = Number(this.productDto.stock);
       this.productDto.price = Number(this.productDto.price);
-      this.productService.updateProduct(this.productDto, this.productId)
-        .subscribe(() =>
-          this.router.navigate([''])
-        );
+
+      this.store.dispatch(updateProduct({productDto: this.productDto, productCode: this.productId}));
     }
   }
 }

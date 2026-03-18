@@ -1,15 +1,18 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../models/product';
 import { ProductTileComponent } from '../../components/product-tile/product-tile.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FilterComponent } from '../../components/filter/filter.component';
-import { ProductService } from '../../services/product.service';
 import { FilterService } from '../../services/filter.service';
-import { HttpParams } from '@angular/common/http';
-import { FILTERS } from '../../util/filters.constants';
-import { CartService } from '../../../cart/services/cart.service';
 import { CartItem } from '../../../cart/models/cart-item';
+import { ProductState } from "../../../store/models/product.model";
+import { loadProducts } from "../../../store/actions/product.actions";
+import { map, Observable } from "rxjs";
+import { selectProducts } from "../../../store/selectors/product.selectors";
+import { Store } from "@ngrx/store";
+import { selectCartItems } from "../../../store/selectors/cart.selectors";
+import { loadCart } from "../../../store/actions/cart.actions";
 
 @Component({
   selector: 'app-home',
@@ -18,34 +21,29 @@ import { CartItem } from '../../../cart/models/cart-item';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
-  productService: ProductService = inject(ProductService);
-  cartService: CartService = inject(CartService);
-  filterService: FilterService = inject(FilterService);
-  @ViewChild(FilterComponent) filterComponent!: FilterComponent;
-  products: Product[] = [];
-  filters: any = {};
-  cartItems: CartItem[] | undefined;
+export class HomeComponent implements OnInit {
+  private filterService: FilterService = inject(FilterService);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private router: Router = inject(Router);
+  private store = inject(Store<ProductState>);
 
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  @ViewChild('filterRef') filterComponent!: FilterComponent;
+
+  filters: any = {};
+  cartItems$: Observable<CartItem[]> = this.store.select(selectCartItems);
+  products$: Observable<Product[]> = this.store.select(selectProducts);
 
   ngOnInit(): void {
-    this.cartService.getCartItems().subscribe(data => {
-      this.cartItems = data;
-    });
+    this.store.dispatch(loadCart());
 
     this.route.queryParams.subscribe(params => {
       this.filters = params;
-      this.loadProducts();
+      this.store.dispatch(
+        loadProducts({filters: this.filters})
+      );
       if (this.filterComponent) {
         this.filterComponent.filterForm.patchValue(this.filterService.getFormUpdateValue());
       }
-    });
-  }
-
-  loadProducts() {
-    this.productService.getFilteredProducts(this.getRequestParams(this.filters)).subscribe(products => {
-      this.products = products;
     });
   }
 
@@ -60,32 +58,13 @@ export class HomeComponent {
     });
   }
 
-  getRequestParams(filters: { [key: string]: string }): HttpParams {
-    let params = new HttpParams();
-    Object.keys(filters).forEach(key => {
-      const value = filters[key];
-      const filter = FILTERS.get(key);
-
-      if (filter && value) {
-        if (value === 'true') {
-          params = params.append(filter.requestQueryParam, '0');
-        } else {
-          params = params.append(filter.requestQueryParam, value);
-        }
-      }
-    });
-    return params;
-  }
-
   get filterKeys() {
     return Object.keys(this.filters);
   }
 
-  getCartItem(productId: Number): CartItem | undefined {
-    return this.cartItems?.find(cartItem => cartItem.id === productId);
-  }
-
-  onProductDeleted() {
-    this.loadProducts();
+  getCartItem(productId: Number): Observable<CartItem | undefined> {
+    return this.cartItems$.pipe(
+      map(items => items.find(item => item.id === productId))
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { Directive, Input, ElementRef, OnChanges, SimpleChanges, Renderer2 } from '@angular/core';
+import { Directive, Input, ElementRef, OnChanges, SimpleChanges, Renderer2, inject } from '@angular/core';
 
 @Directive({
   selector: 'appStockLabel',
@@ -7,7 +7,8 @@ import { Directive, Input, ElementRef, OnChanges, SimpleChanges, Renderer2 } fro
 export class StockLabelDirective implements OnChanges {
   @Input() stock!: number | undefined;
 
-  constructor(private el: ElementRef, private renderer: Renderer2) { }
+  private el: ElementRef = inject(ElementRef);
+  private renderer: Renderer2 = inject(Renderer2);
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['stock']) {
@@ -16,8 +17,8 @@ export class StockLabelDirective implements OnChanges {
   }
 
   updateStockLabel() {
-    let color = '';
-    let text = '';
+    let color: string;
+    let text: string;
     if (!this.stock) {
       color = 'red';
       text = 'Out of stock';

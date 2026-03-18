@@ -1,10 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CartItem } from '../../models/cart-item';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faRectangleXmark } from '@fortawesome/free-solid-svg-icons';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { CartService } from '../../services/cart.service';
+import { Observable } from "rxjs";
+import { Store } from "@ngrx/store";
+import { CartState } from "../../../store/models/cart.model";
+import { selectCartItems } from "../../../store/selectors/cart.selectors";
+import { deleteCartItem, loadCart } from "../../../store/actions/cart.actions";
 
 @Component({
   selector: 'app-cart-page',
@@ -15,39 +19,26 @@ import { CartService } from '../../services/cart.service';
   animations: [
     trigger('rowAnimation', [
       transition(':enter', [
-        style({ transform: 'translateX(-100%)', opacity: 0 }),
-        animate('500ms ease-out', style({ transform: 'translateX(0)', opacity: 1 }))
+        style({transform: 'translateX(-100%)', opacity: 0}),
+        animate('500ms ease-out', style({transform: 'translateX(0)', opacity: 1}))
       ]),
       transition(':leave', [
-        animate('500ms ease-in', style({ transform: 'translateX(-100%)', opacity: 0 }))
+        animate('500ms ease-in', style({transform: 'translateX(-100%)', opacity: 0}))
       ])
     ])
   ]
 })
-export class CartPageComponent {
-  cartService: CartService;
-  cartItems: CartItem[] = [];
+export class CartPageComponent implements OnInit {
+  private store = inject(Store<CartState>);
+
+  cartItems$: Observable<CartItem[]> = this.store.select(selectCartItems);
   faRectangleXmark = faRectangleXmark;
 
-  constructor() {
-    this.cartService = inject(CartService);
-  }
-
   ngOnInit() {
-    this.getCartItems();
+    this.store.dispatch(loadCart());
   }
 
   deleteCartItem(cartItemId: number) {
-    this.cartService.deleteCartItem(cartItemId).subscribe(
-      () => {
-        this.cartItems = this.cartItems.filter(item => item.id !== cartItemId);
-      }
-    );
-  }
-
-  getCartItems() {
-    this.cartService.getCartItems().subscribe(
-      data => { this.cartItems = data; }
-    );
+    this.store.dispatch(deleteCartItem({ cartItemId }));
   }
 }

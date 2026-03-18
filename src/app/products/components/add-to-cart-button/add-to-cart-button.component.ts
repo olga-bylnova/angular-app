@@ -1,8 +1,10 @@
 import { Component, inject, Input } from '@angular/core';
 import { CartItem } from '../../../cart/models/cart-item';
 import { Product } from '../../models/product';
-import { CartService } from '../../../cart/services/cart.service';
 import { CommonModule } from '@angular/common';
+import { Store } from "@ngrx/store";
+import { CartState } from "../../../store/models/cart.model";
+import { createCartItem, deleteCartItem, updateCartItem } from "../../../store/actions/cart.actions";
 
 @Component({
   selector: 'app-add-to-cart-button',
@@ -13,18 +15,16 @@ import { CommonModule } from '@angular/common';
 })
 export class AddToCartButtonComponent {
   @Input() isDisabled!: boolean;
-  productCount: number = 0;
-  _cartItem: CartItem | undefined;
   @Input() product!: Product;
-  cartService: CartService;
-  isButtonClicked = false;
 
-  constructor() {
-    this.cartService = inject(CartService);
-  }
+  private store = inject(Store<CartState>);
+
+  productCount: number = 0;
+  isButtonClicked = false;
+  private _cartItem: CartItem | undefined | null;
 
   @Input()
-  set cartItem(value: CartItem | undefined) {
+  set cartItem(value: CartItem | undefined | null) {
     this._cartItem = value;
     this.productCount = value ? value.count : 0;
   }
@@ -47,16 +47,16 @@ export class AddToCartButtonComponent {
     this.updateProductCount();
   }
 
-  updateProductCount() {
+  private updateProductCount() {
     if (this.productCount !== 0) {
       if (this._cartItem) {
-        this.cartService.updateCartItem(this._cartItem, this.productCount);
+        this.store.dispatch(updateCartItem({ cartItem: this._cartItem, productCount: this.productCount }));
       } else {
-        this._cartItem = this.cartService.createCartItem(this.product, this.productCount);
+        this.store.dispatch(createCartItem({ product: this.product, productCount: this.productCount }));
       }
     } else {
       if (this._cartItem) {
-        this.cartService.deleteCartItem(this._cartItem.id).subscribe();
+        this.store.dispatch(deleteCartItem({ cartItemId: this._cartItem.id }));
         this.isButtonClicked = false;
         this._cartItem = undefined;
       }

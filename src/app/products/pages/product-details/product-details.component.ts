@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../models/product';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -20,10 +20,11 @@ import { CartItem } from '../../../cart/models/cart-item';
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
 })
-export class ProductDetailsComponent {
-  route: ActivatedRoute = inject(ActivatedRoute);
-  productService: ProductService = inject(ProductService);
-  cartService: CartService = inject(CartService);
+export class ProductDetailsComponent implements OnInit {
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private productService: ProductService = inject(ProductService);
+  private cartService: CartService = inject(CartService);
+
   product$: Observable<Product> = EMPTY;
   reviews$: Observable<Review[]> = EMPTY;
   cartItem: CartItem | undefined;
@@ -38,7 +39,7 @@ export class ProductDetailsComponent {
         tap(product => {
           this.isOutOfStock = !product.stock;
 
-          this.cartService.getCartItemByProductId(product.id).subscribe(data => {
+          this.cartService.getCartItemById(product.id).subscribe(data => {
             this.cartItem = data;
           });
         })

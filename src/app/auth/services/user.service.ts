@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../../shared/models/user';
 
@@ -7,9 +7,9 @@ import { User } from '../../shared/models/user';
   providedIn: 'root'
 })
 export class UserService {
-  private usersApiUrl = 'http://localhost:3000/users';
+  private http: HttpClient = inject(HttpClient);
 
-  constructor(private http: HttpClient) { }
+  private usersApiUrl = 'http://localhost:3000/users';
 
   getUserByEmailAndPassword(email: string, password: string): Observable<User[]> {
     let params = new HttpParams();

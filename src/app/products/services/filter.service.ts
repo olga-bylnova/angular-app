@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { inject, Injectable } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FILTERS } from '../util/filters.constants';
 
@@ -7,9 +7,10 @@ import { FILTERS } from '../util/filters.constants';
   providedIn: 'root'
 })
 export class FilterService {
-  constructor(private route: ActivatedRoute, private fb: FormBuilder) { }
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private fb: FormBuilder = inject(FormBuilder);
 
-  initializeForm() {
+  initializeForm(): FormGroup {
     const formGroup = this.fb.group({
       priceFrom: [null, { validators: [Validators.min(0)] }],
       priceTo: [null, { validators: [Validators.min(0)] }],
@@ -39,7 +40,7 @@ export class FilterService {
     return formValues;
   }
 
-  getNumber(value: string): number | null {
+  private getNumber(value: string): number | null {
     const numberValue = Number(value);
     return isNaN(numberValue) ? null : numberValue;
   }
